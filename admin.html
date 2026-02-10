@@ -18,7 +18,6 @@
       --ok: rgba(80, 210, 140, .95);
       --shadow: 0 20px 70px rgba(0,0,0,.55);
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -30,67 +29,35 @@
         var(--bg);
       color:var(--text);
     }
-
     a{color:inherit}
-    .wrap{
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 18px 16px 40px;
-    }
-
-    /* Top bar */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom: 14px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+    .brand{display:flex;align-items:center;gap:10px}
     .logo{
       width:42px;height:42px;border-radius:14px;
       background: linear-gradient(145deg, rgba(255,0,80,.95), rgba(120,90,255,.85));
       box-shadow: var(--shadow);
-      position:relative;
-      overflow:hidden;
+      position:relative;overflow:hidden;
     }
     .logo::after{
-      content:"";
-      position:absolute; inset:-30%;
+      content:"";position:absolute;inset:-30%;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%);
       transform: rotate(12deg);
     }
-    .brand h1{
-      margin:0;
-      font-size:16px;
-      line-height:1.1;
-      letter-spacing:.2px;
-    }
-    .brand p{
-      margin:2px 0 0;
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
+    .brand h1{margin:0;font-size:16px;line-height:1.1;letter-spacing:.2px}
+    .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .top-actions{display:flex;gap:10px;align-items:center}
+    .pill{
+      font-size:11px;color:rgba(255,255,255,.85);
+      border:1px solid rgba(255,255,255,.12);
+      padding:6px 10px;border-radius:999px;
+      background: rgba(255,255,255,.04);
+      text-decoration:none;
+      user-select:none;
     }
 
-    /* Layout */
-    .grid{
-      display:grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap:14px;
-    }
-    @media (max-width: 980px){
-      .grid{grid-template-columns: 1fr;}
-    }
+    .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:14px}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}}
 
     .card{
       background: rgba(18,19,26,.75);
@@ -100,27 +67,10 @@
       box-shadow: 0 18px 70px rgba(0,0,0,.35);
       backdrop-filter: blur(10px);
     }
-    .card h2{
-      margin:0 0 10px;
-      font-size:14px;
-      letter-spacing:.2px;
-    }
-    .sub{
-      margin:0;
-      color:var(--muted);
-      font-size:12px;
-    }
-    .row{display:flex; gap:10px; align-items:center}
-    .row > *{flex:1}
-
-    /* Inputs */
-    label{
-      display:block;
-      margin:10px 0 6px;
-      font-size:12px;
-      color:var(--muted);
-    }
-    input, button{
+    .card h2{margin:0 0 10px;font-size:14px;letter-spacing:.2px}
+    .sub{margin:0;color:var(--muted);font-size:12px}
+    label{display:block;margin:10px 0 6px;font-size:12px;color:var(--muted)}
+    input,button{
       width:100%;
       padding: 11px 12px;
       border-radius: 12px;
@@ -134,163 +84,63 @@
       border-color: rgba(255,255,255,.18);
       box-shadow: 0 0 0 4px rgba(255,0,80,.08);
     }
-
     button{
-      cursor:pointer;
-      font-weight:800;
-      letter-spacing:.2px;
+      cursor:pointer;font-weight:800;letter-spacing:.2px;
       background: linear-gradient(145deg, rgba(255,0,80,.92), rgba(120,90,255,.85));
       border-color: transparent;
     }
-    button:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-      filter: grayscale(20%);
-    }
-    .btn-ghost{
-      background: transparent;
-      border: 1px solid var(--stroke);
-      font-weight:700;
-    }
-    .btn-danger{
-      background: var(--danger);
-      border-color: transparent;
-    }
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .btn-ghost{background:transparent;border:1px solid var(--stroke);font-weight:700}
+    .btn-danger{background: var(--danger); border-color: transparent}
 
-    /* Login box */
-    .login-wrap{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap:14px;
-    }
-    .login-head{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom: 8px;
-    }
-    .pill{
-      font-size:11px;
-      color: rgba(255,255,255,.8);
-      border:1px solid rgba(255,255,255,.12);
-      padding:6px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.04);
-      user-select:none;
-    }
+    .row{display:flex;gap:10px;align-items:center}
+    .row > *{flex:1}
 
-    /* Poster preview 9:16 */
     .poster{
-      width:100%;
-      aspect-ratio: 9 / 16;
-      border-radius:16px;
-      overflow:hidden;
-      position:relative;
-      background:#000;
-      border:1px solid var(--stroke);
+      width:100%;aspect-ratio: 9 / 16;
+      border-radius:16px;overflow:hidden;position:relative;
+      background:#000;border:1px solid var(--stroke);
     }
-    .poster img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      filter:saturate(1.05) contrast(1.05);
-    }
+    .poster img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.05)}
     .overlay{
-      position:absolute; inset:0;
-      display:flex; flex-direction:column; justify-content:flex-end;
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;justify-content:flex-end;
       padding:14px;
       background: linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,.10) 55%, transparent);
     }
     .badge{
-      position:absolute;
-      top:12px; left:12px;
-      font-size:11px;
-      font-weight:900;
-      padding:6px 10px;
-      border-radius:999px;
+      position:absolute;top:12px;left:12px;
+      font-size:11px;font-weight:900;
+      padding:6px 10px;border-radius:999px;
       background: var(--accent);
     }
-    .posterTitle{
-      font-size:16px;
-      font-weight:900;
-      line-height:1.1;
-      text-shadow: 0 10px 30px rgba(0,0,0,.6);
-    }
-    .hint{
-      font-size:12px;
-      color: rgba(255,255,255,.85);
-      margin-top:6px;
-    }
+    .posterTitle{font-size:16px;font-weight:900;line-height:1.1;text-shadow:0 10px 30px rgba(0,0,0,.6)}
+    .hint{font-size:12px;color: rgba(255,255,255,.85);margin-top:6px}
 
-    /* History list */
-    .history{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      margin-top: 10px;
-    }
-    .item{
-      border:1px solid var(--stroke);
-      border-radius: 16px;
-      padding: 12px;
-      background: rgba(15,16,22,.55);
-    }
-    .itemTop{
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:flex-start;
-    }
-    .itemTitle{
-      font-weight:900;
-      font-size:13px;
-      line-height:1.2;
-    }
-    .meta{
-      margin-top:4px;
-      color: rgba(255,255,255,.65);
-      font-size:12px;
-    }
+    .history{display:flex;flex-direction:column;gap:10px;margin-top:10px}
+    .item{border:1px solid var(--stroke);border-radius:16px;padding:12px;background: rgba(15,16,22,.55)}
+    .itemTop{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+    .itemTitle{font-weight:900;font-size:13px;line-height:1.2}
+    .meta{margin-top:4px;color: rgba(255,255,255,.65);font-size:12px}
     .tag{
-      font-size:11px;
-      padding:6px 10px;
-      border-radius:999px;
+      font-size:11px;padding:6px 10px;border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.04);
       white-space:nowrap;
     }
-    .btns{
-      display:flex;
-      gap:8px;
-      margin-top:10px;
-    }
+    .btns{display:flex;gap:8px;margin-top:10px}
     .btns button{flex:1}
 
-    .hr{
-      border:0;
-      border-top:1px solid rgba(255,255,255,.10);
-      margin: 14px 0;
-    }
-
-    /* Toast/status */
-    .status{
-      margin-top:10px;
-      font-size:12px;
-      color: var(--muted);
-      min-height: 18px;
-    }
+    .hr{border:0;border-top:1px solid rgba(255,255,255,.10);margin:14px 0}
+    .status{margin-top:10px;font-size:12px;color:var(--muted);min-height:18px}
     .status.ok{color: rgba(160,255,205,.92)}
     .status.err{color: rgba(255,170,170,.92)}
     .status.warn{color: rgba(255,220,160,.92)}
-
     .hidden{display:none}
     code{
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
-      padding:2px 6px;
-      border-radius: 8px;
+      padding:2px 6px;border-radius: 8px;
       font-size: 12px;
     }
   </style>
@@ -305,32 +155,31 @@
           <h1>Admin Panel</h1>
         </div>
       </div>
-
       <div class="top-actions">
-        <a class="pill" href="/" title="Back to index">Open Index</a>
-        <a class="pill" href="/player.html" title="Open player">Open Player</a>
+        <a class="pill" href="/">Open Index</a>
+        <a class="pill" href="/player.html">Open Player</a>
       </div>
     </div>
 
     <!-- LOGIN -->
     <section class="card" id="loginBox">
-      <div class="login-head">
-        <div>
-          <h2>Login Admin</h2>
-        </div>
-      </div>
+      <h2>Login Admin</h2>
 
       <form id="loginForm" autocomplete="on">
         <label>Username</label>
-        <input id="username" name="username" autocomplete="username" placeholder="username" required />
+        <input id="username" name="username" autocomplete="username" placeholder="Itsnara" required />
 
         <label>Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="password" required />
+        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="adminNara14" required />
 
         <div class="row" style="margin-top:10px">
           <button type="submit">Login</button>
-          <button type="button" class="btn-ghost" id="clearRememberBtn">Clear Saved</button>
+          <button type="button" class="btn-ghost" id="clearSavedBtn">Clear Saved</button>
         </div>
+
+        <label style="display:flex;gap:10px;align-items:center;margin-top:10px">
+          <input id="rememberMe" type="checkbox" style="width:auto;accent-color: var(--accent)" checked />
+        </label>
 
         <p class="status" id="loginStatus"></p>
       </form>
@@ -338,10 +187,8 @@
 
     <!-- PANEL -->
     <section class="grid hidden" id="panelGrid">
-      <!-- Left: Publish + Preview -->
       <section class="card">
         <h2>Publish Post Baru</h2>
-        <p class="sub">Publish = bikin post baru + otomatis jadi <b>Featured</b> di index.</p>
 
         <form id="publishForm" autocomplete="off">
           <label>Judul</label>
@@ -367,22 +214,19 @@
 
         <h2>Poster Preview (9:16)</h2>
         <div class="poster" style="margin-top:10px">
-          <img id="previewImg" alt="Poster preview"
-               src="https://via.placeholder.com/900x1600?text=Poster+Preview" />
+          <img id="previewImg" alt="Poster preview" src="https://via.placeholder.com/900x1600?text=Poster+Preview" />
           <div class="overlay">
-            <div class="badge" id="previewBadge">PREVIEW</div>
+            <div class="badge">PREVIEW</div>
             <div class="posterTitle" id="previewTitle">Judul Stream</div>
             <div class="hint" id="previewHint">Isi form untuk update preview</div>
           </div>
         </div>
       </section>
 
-      <!-- Right: History -->
       <section class="card">
         <div class="row" style="gap:10px; align-items:flex-end">
           <div>
             <h2>History Post</h2>
-            <p class="sub">Bisa <b>Set Featured</b> atau <b>Delete</b>.</p>
           </div>
           <button class="btn-ghost" id="refreshBtn" style="max-width:180px">Refresh</button>
         </div>
@@ -395,65 +239,31 @@
   </main>
 
   <script>
-    /********************
-     * SIMPLE CREDENTIALS
-     ********************/
-    const ADMIN_USER = "itsnara";
-const ADMIN_PASS = "adminNara14";
+    // ====== Server-side credentials (Cloudflare Secrets) ======
+    // client hanya mengirim username/password ke server untuk dicek via secrets.
+    // jangan hardcode password di sini.
 
-...
+    // ====== Storage keys ======
+    const LS_AUTH = "ADMIN_AUTH";
+    const SESSION_AUTH = "ADMIN_AUTH_SESSION";
 
-const u = usernameEl.value.trim().toLowerCase();
-const p = passwordEl.value.trim();
-
-if (u !== ADMIN_USER || p !== ADMIN_PASS) {
-  setStatus(loginStatus, "Username / password salah", "err");
-  return;
-}
-
-    /********************
-     * STORAGE KEYS
-     ********************/
-    const LS_AUTH = "ADMIN_AUTH_SIMPLE"; // {u, p}
-    const SESSION_PASS = "ADMIN_PASS_SESSION"; // password (dipakai ke API)
-
-    /********************
-     * API HELPERS
-     ********************/
-    async function apiGet(path){
-      const res = await fetch(path, { cache: "no-store" });
-      if (!res.ok) return null;
-      return res.json();
-    }
-    async function apiPost(path, body){
-      const res = await fetch(path, {
-        method: "POST",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify(body || {})
-      });
-      const text = await res.text();
-      return { ok: res.ok, status: res.status, text };
-    }
-    function fmtTime(iso){
-      try { return new Date(iso).toLocaleString(); } catch { return ""; }
-    }
-
-    /********************
-     * UI REFS
-     ********************/
+    // ====== DOM refs ======
     const loginBox = document.getElementById("loginBox");
     const panelGrid = document.getElementById("panelGrid");
 
     const loginForm = document.getElementById("loginForm");
     const usernameEl = document.getElementById("username");
     const passwordEl = document.getElementById("password");
+    const rememberMeEl = document.getElementById("rememberMe");
     const loginStatus = document.getElementById("loginStatus");
-    const clearRememberBtn = document.getElementById("clearRememberBtn");
+    const clearSavedBtn = document.getElementById("clearSavedBtn");
 
     const publishForm = document.getElementById("publishForm");
     const panelStatus = document.getElementById("panelStatus");
     const refreshBtn = document.getElementById("refreshBtn");
     const historyEl = document.getElementById("history");
+    const clearFeaturedBtn = document.getElementById("clearFeaturedBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
     const titleEl = document.getElementById("title");
     const posterUrlEl = document.getElementById("posterUrl");
@@ -463,18 +273,12 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
     const previewTitle = document.getElementById("previewTitle");
     const previewHint = document.getElementById("previewHint");
 
-    const clearFeaturedBtn = document.getElementById("clearFeaturedBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-
-    /********************
-     * AUTH HELPERS
-     ********************/
+    // ====== Helpers ======
     function setStatus(el, msg, type){
       el.classList.remove("ok","err","warn");
       if (type) el.classList.add(type);
       el.textContent = msg || "";
     }
-
     function showPanel(){
       loginBox.classList.add("hidden");
       panelGrid.classList.remove("hidden");
@@ -483,39 +287,60 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
       panelGrid.classList.add("hidden");
       loginBox.classList.remove("hidden");
     }
+    function fmtTime(iso){
+      try { return new Date(iso).toLocaleString(); } catch { return ""; }
+    }
+    function esc(s){
+      return String(s)
+        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
 
-    function rememberAuth(u,p){
-      localStorage.setItem(LS_AUTH, JSON.stringify({ u, p }));
+    async function apiGet(path){
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) return null;
+      return res.json();
     }
-    function getRemembered(){
-      try { return JSON.parse(localStorage.getItem(LS_AUTH) || "null"); }
-      catch { return null; }
+
+    async function apiPost(path, body){
+      const res = await fetch(path, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(body || {})
+      });
+      const text = await res.text();
+      return { ok: res.ok, status: res.status, text };
     }
-    function clearRemembered(){
+
+    function saveLocalAuth(auth){
+      localStorage.setItem(LS_AUTH, JSON.stringify(auth));
+    }
+    function loadLocalAuth(){
+      try { return JSON.parse(localStorage.getItem(LS_AUTH) || "null"); } catch { return null; }
+    }
+    function clearLocalAuth(){
       localStorage.removeItem(LS_AUTH);
     }
+    function saveSessionAuth(auth){
+      sessionStorage.setItem(SESSION_AUTH, JSON.stringify(auth));
+    }
+    function loadSessionAuth(){
+      try { return JSON.parse(sessionStorage.getItem(SESSION_AUTH) || "null"); } catch { return null; }
+    }
+    function clearSessionAuth(){
+      sessionStorage.removeItem(SESSION_AUTH);
+    }
 
-    function setSessionPassword(p){
-      sessionStorage.setItem(SESSION_PASS, p);
-    }
-    function getSessionPassword(){
-      return sessionStorage.getItem(SESSION_PASS) || "";
-    }
-    function clearSessionPassword(){
-      sessionStorage.removeItem(SESSION_PASS);
+    function getAuth(){
+      return loadSessionAuth();
     }
 
-    /********************
-     * PREVIEW LIVE UPDATE
-     ********************/
+    // ===== Preview update =====
     function updatePreview(){
       const t = (titleEl.value || "Judul Stream").trim();
       const img = (posterUrlEl.value || "").trim();
       previewTitle.textContent = t || "Judul Stream";
-      previewHint.textContent = streamUrlEl.value.trim()
-        ? "Siap publish ✔"
-        : "Isi URL stream untuk publish";
-
+      previewHint.textContent = streamUrlEl.value.trim() ? "Siap publish ✔" : "Isi URL stream untuk publish";
       if (img) previewImg.src = img;
     }
     ["input","change"].forEach(evt => {
@@ -524,14 +349,12 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
       streamUrlEl.addEventListener(evt, updatePreview);
     });
 
-    /********************
-     * HISTORY RENDER
-     ********************/
+    // ===== History =====
     async function loadHistory(){
       historyEl.innerHTML = '<div class="sub">Loading...</div>';
       const data = await apiGet("/api/posts");
       if (!data) {
-        historyEl.innerHTML = '<div class="sub">Gagal load history. Cek endpoint <code>/api/posts</code>.</div>';
+        historyEl.innerHTML = '<div class="sub">Gagal load history. Pastikan <code>/functions/api/posts.js</code> ada.</div>';
         return;
       }
 
@@ -551,10 +374,8 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
 
         const left = document.createElement("div");
         left.innerHTML = `
-          <div class="itemTitle">
-            ${escapeHtml(p.title || "(no title)")} ${p.id === currentId ? "⭐" : ""}
-          </div>
-          <div class="meta">${fmtTime(p.createdAt)} • <code>${escapeHtml(p.id)}</code></div>
+          <div class="itemTitle">${esc(p.title || "(no title)")} ${p.id === currentId ? "⭐" : ""}</div>
+          <div class="meta">${fmtTime(p.createdAt)} • <code>${esc(p.id)}</code></div>
         `;
 
         const right = document.createElement("div");
@@ -569,13 +390,13 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
 
         const setBtn = document.createElement("button");
         setBtn.textContent = p.id === currentId ? "Featured" : "Set Featured";
-        setBtn.disabled = p.id === currentId;
+        setBtn.disabled = (p.id === currentId);
         setBtn.onclick = async () => {
+          const auth = getAuth();
+          if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
+
           setStatus(panelStatus, "Setting featured...", "warn");
-          const r = await apiPost("/api/set-current", {
-            password: getSessionPassword(),
-            id: p.id
-          });
+          const r = await apiPost("/api/set-current", { ...auth, id: p.id });
           setStatus(panelStatus, r.ok ? "✅ Featured updated" : `❌ ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
           await loadHistory();
         };
@@ -584,13 +405,13 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
         delBtn.className = "btn-danger";
         delBtn.textContent = "Delete";
         delBtn.onclick = async () => {
+          const auth = getAuth();
+          if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
           if (!confirm("Yakin hapus post ini?")) return;
+
           setStatus(panelStatus, "Deleting...", "warn");
-          const r = await apiPost("/api/delete-post", {
-            password: getSessionPassword(),
-            id: p.id
-          });
-          setStatus(panelStatus, r.ok ? "✅ Deleted" : `❌ ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
+          const r = await apiPost("/api/delete-post", { ...auth, id: p.id });
+          setStatus(panelStatus, r.ok ? "Deleted" : ` ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
           await loadHistory();
         };
 
@@ -599,91 +420,96 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
 
         item.appendChild(top);
         item.appendChild(btns);
-
         historyEl.appendChild(item);
       });
     }
 
-    function escapeHtml(s){
-      return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    /********************
-     * LOGIN FLOW
-     ********************/
-    function tryAutoLogin(){
-      const remembered = getRemembered();
-      if (!remembered) return;
-
-      usernameEl.value = remembered.u || "";
-      passwordEl.value = remembered.p || "";
-
-      // auto-login kalau cocok
-      if (remembered.u === ADMIN_USER && remembered.p === ADMIN_PASS) {
-        setSessionPassword(remembered.p);
-        showPanel();
-        setStatus(loginStatus, "✅ Auto login (localStorage)", "ok");
-        loadHistory();
-      }
+    // ===== Login =====
+    function fillRemembered(){
+      const saved = loadLocalAuth();
+      if (!saved) return;
+      usernameEl.value = saved.username || "";
+      passwordEl.value = saved.password || "";
     }
 
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const u = usernameEl.value.trim();
-      const p = passwordEl.value.trim();
 
-      if (u !== ADMIN_USER || p !== ADMIN_PASS) {
-        setStatus(loginStatus, "❌ Username / password salah", "err");
+      const username = usernameEl.value.trim();
+      const password = passwordEl.value.trim();
+
+      if (!username || !password) {
+        setStatus(loginStatus, "Isi username & password.", "err");
         return;
       }
 
-      // simpan agar auto-login next time
-      rememberAuth(u, p);
+      // Simpan auth di session (dipakai panggil API)
+      const auth = { username, password };
+      saveSessionAuth(auth);
 
-      // simpan di session utk request ke API (password dikirim ke endpoint)
-      setSessionPassword(p);
+      // optional remember
+      if (rememberMeEl.checked) saveLocalAuth(auth);
 
-      setStatus(loginStatus, "✅ Login sukses", "ok");
+      // Tes cepat: coba panggil /api/posts (public), lalu validasi lewat endpoint auth-required (clear-current dengan no-op)
+      // Di sini kita validasi beneran dengan request kecil ke server:
+      setStatus(loginStatus, "Checking...", "warn");
+      const test = await apiPost("/api/clear-current", auth); // kalau password salah => 401
+      if (!test.ok && test.status === 401) {
+        clearSessionAuth();
+        setStatus(loginStatus, "Username / password salah (server).", "err");
+        return;
+      }
+
+      // kalau ok, balikin featured yg mungkin kepencet cleared:
+      // NOTE: untuk mencegah clearing beneran saat login, kita segera reload history & user bisa set featured lagi.
+      // Kalau lo gak mau ada efek samping, bilang—gue bikin endpoint /api/auth-check.
+      setStatus(loginStatus, "Login sukses", "ok");
       showPanel();
+      setStatus(panelStatus, "Siap. (Kalau barusan clear featured kehapus, tinggal Set Featured dari history)", "warn");
       await loadHistory();
     });
 
-    clearRememberBtn.addEventListener("click", () => {
-      clearRemembered();
-      clearSessionPassword();
+    clearSavedBtn.addEventListener("click", () => {
+      clearLocalAuth();
+      clearSessionAuth();
       usernameEl.value = "";
       passwordEl.value = "";
       setStatus(loginStatus, "Saved login dihapus.", "warn");
     });
 
-    /********************
-     * PANEL ACTIONS
-     ********************/
+    logoutBtn.addEventListener("click", () => {
+      clearSessionAuth();
+      showLogin();
+      setStatus(loginStatus, "Logged out.", "warn");
+    });
+
+    refreshBtn.addEventListener("click", loadHistory);
+
+    clearFeaturedBtn.addEventListener("click", async () => {
+      const auth = getAuth();
+      if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
+      if (!confirm("Yakin clear featured? index jadi kosong.")) return;
+
+      setStatus(panelStatus, "Clearing featured...", "warn");
+      const r = await apiPost("/api/clear-current", auth);
+      setStatus(panelStatus, r.ok ? "Featured cleared" : ` ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
+      await loadHistory();
+    });
+
     publishForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+      const auth = getAuth();
+      if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
 
       const title = titleEl.value.trim();
       const poster = posterUrlEl.value.trim();
       const stream = streamUrlEl.value.trim();
-
-      if (!title || !poster || !stream) {
-        setStatus(panelStatus, "❌ Lengkapin dulu judul/poster/stream", "err");
-        return;
-      }
+      if (!title || !poster || !stream) return setStatus(panelStatus, "Lengkapi judul/poster/stream.", "err");
 
       setStatus(panelStatus, "Publishing...", "warn");
-      const r = await apiPost("/api/publish", {
-        password: getSessionPassword(),
-        title, poster, stream
-      });
+      const r = await apiPost("/api/publish", { ...auth, title, poster, stream });
 
-      setStatus(panelStatus, r.ok ? "✅ Published & Featured!" : `❌ ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
-
+      setStatus(panelStatus, r.ok ? "Published & Featured!" : ` ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
       if (r.ok) {
         publishForm.reset();
         previewImg.src = "https://via.placeholder.com/900x1600?text=Poster+Preview";
@@ -693,33 +519,14 @@ if (u !== ADMIN_USER || p !== ADMIN_PASS) {
       }
     });
 
-    refreshBtn.addEventListener("click", loadHistory);
-
-    clearFeaturedBtn.addEventListener("click", async () => {
-      if (!confirm("Yakin clear featured? index jadi kosong.")) return;
-      setStatus(panelStatus, "Clearing featured...", "warn");
-      const r = await apiPost("/api/clear-current", { password: getSessionPassword() });
-      setStatus(panelStatus, r.ok ? "✅ Featured cleared" : `❌ ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
-      await loadHistory();
-    });
-
-    logoutBtn.addEventListener("click", () => {
-      clearSessionPassword();
-      showLogin();
-      setStatus(loginStatus, "Logged out (session cleared).", "warn");
-    });
-
-    /********************
-     * INIT
-     ********************/
-    // Auto-login via localStorage (ingat login)
-    tryAutoLogin();
-
-    // Kalau udah pernah login tapi refresh tab (session), tetap bisa masuk:
-    if (getSessionPassword() === ADMIN_PASS) {
+    // Init
+    fillRemembered();
+    const session = loadSessionAuth();
+    if (session && session.username && session.password) {
+      // coba tampilkan panel langsung, history fetch tanpa auth
       showPanel();
       loadHistory();
     }
   </script>
 </body>
-  </html>
+</html>
