@@ -78,7 +78,27 @@
       border-color: rgba(255,255,255,.18);
       box-shadow: 0 0 0 4px rgba(255,0,80,.08);
     }
-    .row{display:flex;gap:10px;align-items:center}
+    select{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: rgba(15,16,22,.95);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{
+      width:100%;
+      padding: 11px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: rgba(15,16,22,.95);
+      color: var(--text);
+      outline:none;
+      resize: vertical;
+    }
+
+    .row{display:flex;gap:10px;align-items:flex-start}
     .row > *{flex:1}
 
     button{
@@ -134,6 +154,11 @@
       padding:2px 6px;border-radius: 8px;
       font-size: 12px;
     }
+
+    /* Servers block */
+    .serverRow{display:flex;gap:10px;align-items:flex-end;margin-top:10px}
+    .serverRow > .col{flex:1}
+    .serverRow .removeBtn{max-width:140px}
   </style>
 </head>
 <body>
@@ -197,15 +222,41 @@
     <section class="grid hidden" id="panelGrid">
       <section class="card">
         <h2>Publish</h2>
+
         <form id="publishForm" autocomplete="off">
           <label>Title</label>
           <input id="title" required />
 
+          <div class="row">
+            <div>
+              <label>Genre</label>
+              <select id="genreSelect">
+                <option value="">Select genre</option>
+              </select>
+              <input id="genreCustom" placeholder="Or type new genre" style="margin-top:8px" />
+            </div>
+
+            <div>
+              <label>Minutes</label>
+              <input id="minutes" type="number" min="1" step="1" placeholder="e.g. 45" required />
+            </div>
+          </div>
+
           <label>Poster URL</label>
           <input id="posterUrl" required />
 
-          <label>Stream / Page URL</label>
-          <input id="streamUrl" required />
+          <label>Description</label>
+          <textarea id="description" rows="4" required></textarea>
+
+          <label>Servers (Stream / Page URL)</label>
+          <div id="servers"></div>
+
+          <button type="button" class="btn-ghost" id="addServerBtn" style="margin-top:10px">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>Add Server</span>
+          </button>
 
           <button type="submit" style="margin-top:12px">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/></svg>
@@ -269,7 +320,15 @@
 
     const titleEl = document.getElementById("title");
     const posterUrlEl = document.getElementById("posterUrl");
-    const streamUrlEl = document.getElementById("streamUrl");
+
+    // NEW fields
+    const genreSelectEl = document.getElementById("genreSelect");
+    const genreCustomEl = document.getElementById("genreCustom");
+    const minutesEl = document.getElementById("minutes");
+    const descEl = document.getElementById("description");
+
+    const serversWrap = document.getElementById("servers");
+    const addServerBtn = document.getElementById("addServerBtn");
 
     function setStatus(el, msg, type){
       el.classList.remove("ok","err","warn");
@@ -315,6 +374,62 @@
       return { ok: res.ok, status: res.status, text };
     }
 
+    function addServerRow(initial = { label: "", url: "" }) {
+      const row = document.createElement("div");
+      row.className = "serverRow";
+
+      row.innerHTML = `
+        <div class="col">
+          <label style="margin-top:0">Server Name</label>
+          <input class="serverLabel" placeholder="e.g. Server 1" value="${esc(initial.label || "")}">
+        </div>
+        <div class="col">
+          <label style="margin-top:0">URL</label>
+          <input class="serverUrl" placeholder="https://..." value="${esc(initial.url || "")}">
+        </div>
+      `;
+
+      const delBtn = document.createElement("button");
+      delBtn.type = "button";
+      delBtn.className = "btn-danger removeBtn";
+      delBtn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6 7h12M9 7V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8V7m-7 0 1 14h6l1-14" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+        <span>Remove</span>
+      `;
+      delBtn.onclick = () => {
+        row.remove();
+        // keep at least one row
+        if (!serversWrap.querySelector(".serverRow")) {
+          addServerRow({ label: "Server 1", url: "" });
+        }
+      };
+
+      row.appendChild(delBtn);
+      serversWrap.appendChild(row);
+    }
+
+    function readServers() {
+      const rows = Array.from(serversWrap.querySelectorAll(".serverRow"));
+      const servers = [];
+      rows.forEach((r, idx) => {
+        const label = r.querySelector(".serverLabel")?.value?.trim() || `Server ${idx+1}`;
+        const url = r.querySelector(".serverUrl")?.value?.trim() || "";
+        if (url) servers.push({ label, url });
+      });
+      return servers;
+    }
+
+    addServerBtn.addEventListener("click", () => {
+      const n = serversWrap.querySelectorAll(".serverRow").length + 1;
+      addServerRow({ label: `Server ${n}`, url: "" });
+    });
+
+    genreSelectEl.addEventListener("change", () => {
+      if (genreSelectEl.value) genreCustomEl.value = "";
+    });
+
     async function loadHistory(){
       historyEl.innerHTML = '<div class="sub">Loading...</div>';
       const data = await apiGet("/api/posts");
@@ -324,6 +439,18 @@
       }
 
       const { currentId, posts } = data;
+
+      // Populate genres from history
+      const genreSet = new Set();
+      (posts || []).forEach(p => {
+        const g = (p.genre || "").trim();
+        if (g) genreSet.add(g);
+      });
+      const genres = Array.from(genreSet).sort((a,b)=>a.localeCompare(b));
+      genreSelectEl.innerHTML =
+        '<option value="">Select genre</option>' +
+        genres.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join("");
+
       if (!posts || posts.length === 0) {
         historyEl.innerHTML = '<div class="sub">No posts</div>';
         return;
@@ -425,6 +552,12 @@
       setStatus(loginStatus, "", "");
       showPanel();
       setStatus(panelStatus, "", "");
+
+      // init at least one server row
+      if (!serversWrap.querySelector(".serverRow")) {
+        addServerRow({ label: "Server 1", url: "" });
+      }
+
       await loadHistory();
     });
 
@@ -461,13 +594,35 @@
 
       const title = titleEl.value.trim();
       const poster = posterUrlEl.value.trim();
-      const stream = streamUrlEl.value.trim();
+      const genre = (genreCustomEl.value.trim() || genreSelectEl.value.trim());
+      const minutes = Number(minutesEl.value);
+      const description = descEl.value.trim();
+      const streams = readServers();
+
+      if (!title || !poster || !genre || !minutes || !description || streams.length === 0) {
+        return setStatus(panelStatus, "Fill all fields (need at least 1 server URL)", "err");
+      }
+
+      const stream = streams[0].url;
 
       setStatus(panelStatus, "Working...", "warn");
-      const r = await apiPost("/api/publish", { ...auth, title, poster, stream });
+      const r = await apiPost("/api/publish", {
+        ...auth,
+        title,
+        poster,
+        stream,
+        streams,
+        genre,
+        minutes,
+        description
+      });
+
       setStatus(panelStatus, r.ok ? "Done" : `Error: ${r.status}`, r.ok ? "ok" : "err");
+
       if (r.ok) {
         publishForm.reset();
+        serversWrap.innerHTML = "";
+        addServerRow({ label: "Server 1", url: "" });
         await loadHistory();
       }
     });
@@ -480,6 +635,9 @@
     const sess = loadSession();
     if (sess?.username && sess?.password) {
       showPanel();
+      if (!serversWrap.querySelector(".serverRow")) {
+        addServerRow({ label: "Server 1", url: "" });
+      }
       loadHistory();
     }
   </script>
