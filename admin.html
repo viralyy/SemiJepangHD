@@ -398,8 +398,18 @@
     /********************
      * SIMPLE CREDENTIALS
      ********************/
-    const ADMIN_USER = "Itsnara";
-    const ADMIN_PASS = "adminNara14";
+    const ADMIN_USER = "itsnara";
+const ADMIN_PASS = "adminNara14";
+
+...
+
+const u = usernameEl.value.trim().toLowerCase();
+const p = passwordEl.value.trim();
+
+if (u !== ADMIN_USER || p !== ADMIN_PASS) {
+  setStatus(loginStatus, "Username / password salah", "err");
+  return;
+}
 
     /********************
      * STORAGE KEYS
