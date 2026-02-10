@@ -1,7 +1,13 @@
 export async function onRequest(context) {
-  const data = await context.env.STREAM_KV.get("stream:current", "json");
+  const currentId = await context.env.STREAM_KV.get("stream:current");
+  if (!currentId) {
+    return new Response(JSON.stringify(null), {
+      headers: { "content-type": "application/json; charset=utf-8" },
+    });
+  }
 
-  return new Response(JSON.stringify(data || null), {
+  const post = await context.env.STREAM_KV.get(`post:${currentId}`, "json");
+  return new Response(JSON.stringify(post || null), {
     headers: { "content-type": "application/json; charset=utf-8" },
   });
 }
