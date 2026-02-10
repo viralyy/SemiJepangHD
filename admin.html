@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="wrap">
+    <h1>Admin Panel</h1>
+
+    <div class="card">
+      <label>ADMIN TOKEN</label>
+      <input id="token" placeholder="tempel token (Bearer)" />
+
+      <form id="adminForm">
+        <label>Judul</label>
+        <input id="title" required />
+
+        <label>URL Poster (9:16)</label>
+        <input id="poster" required />
+
+        <label>URL Stream (.m3u8 / mp4)</label>
+        <input id="stream" required />
+
+        <button type="submit">Publish</button>
+      </form>
+
+      <p class="sub" id="status" style="margin-top:10px"></p>
+    </div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
