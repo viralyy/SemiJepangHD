@@ -75,72 +75,287 @@ function esc(s) {
   }
 })();
 
-/* =========================
-   PLAYER (video + iframe fallback)
-========================= */
+/* ===== PLAYER (header + multi-server + related) ===== */
 (async () => {
   const video = document.getElementById("video");
   const frameWrap = document.getElementById("frameWrap");
   const frame = document.getElementById("frame");
-  const pageTitle = document.getElementById("pageTitle");
+  const titleEl = document.getElementById("title");
+  const descEl = document.getElementById("description");
+  const serverBar = document.getElementById("serverBar");
+
+  const relatedGrid = document.getElementById("relatedGrid");
+  const relatedMeta = document.getElementById("relatedMeta");
+
+  const searchBtn = document.getElementById("searchBtn");
+  const searchRow = document.getElementById("searchRow");
+  const searchInput = document.getElementById("searchInput");
+  const clearFilterBtn = document.getElementById("clearFilterBtn");
+
+  const menuBtn = document.getElementById("menuBtn");
+  const menuPanel = document.getElementById("menuPanel");
+  const menuBackdrop = document.getElementById("menuBackdrop");
+  const menuClose = document.getElementById("menuClose");
+  const genreList = document.getElementById("genreList");
 
   if (!video && !frame) return; // bukan halaman player
 
-  const data = await apiGet("/api/stream");
-  if (!data) {
-    if (pageTitle) pageTitle.textContent = "Stream unavailable";
+  // ===== header interactions (same behavior as index) =====
+  function openMenu() {
+    menuPanel?.classList.add("open");
+    menuBackdrop?.classList.add("open");
+    menuPanel?.setAttribute("aria-hidden", "false");
+  }
+  function closeMenu() {
+    menuPanel?.classList.remove("open");
+    menuBackdrop?.classList.remove("open");
+    menuPanel?.setAttribute("aria-hidden", "true");
+  }
+  menuBtn && (menuBtn.onclick = openMenu);
+  menuClose && (menuClose.onclick = closeMenu);
+  menuBackdrop && (menuBackdrop.onclick = closeMenu);
+
+  searchBtn && (searchBtn.onclick = () => {
+    searchRow?.classList.toggle("show");
+    if (searchRow?.classList.contains("show")) setTimeout(() => searchInput?.focus(), 0);
+  });
+
+  function esc(s){
+    return String(s)
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+  }
+
+  // ===== get current post =====
+  const params = new URLSearchParams(location.search);
+  const wantedId = params.get("id");
+
+  let currentPost = null;
+  let allPostsData = null;
+
+  // Try /api/posts first (so we can play by id and also build related)
+  allPostsData = await apiGet("/api/posts");
+  if (allPostsData?.posts && allPostsData.posts.length) {
+    if (wantedId) currentPost = allPostsData.posts.find(p => p.id === wantedId) || null;
+  }
+
+  // Fallback: featured
+  if (!currentPost) {
+    const featured = await apiGet("/api/stream");
+    if (featured) currentPost = featured;
+  }
+
+  if (!currentPost) {
+    if (titleEl) titleEl.textContent = "Stream unavailable";
+    if (descEl) descEl.textContent = "";
     if (video) video.style.display = "none";
     if (frameWrap) frameWrap.style.display = "none";
+    if (relatedMeta) relatedMeta.textContent = "No posts";
     return;
   }
 
-  if (pageTitle) pageTitle.textContent = data.title || "Player";
+  // Normalize servers
+  const streams = Array.isArray(currentPost.streams) && currentPost.streams.length
+    ? currentPost.streams
+    : (currentPost.stream ? [{ label: "Server 1", url: currentPost.stream }] : []);
 
-  const url = data.stream || "";
-  const useVideo = isHls(url) || isDirectVideo(url);
+  const minutes = currentPost.minutes ?? currentPost.durationMinutes ?? currentPost.duration ?? null;
+  const genre = currentPost.genre || "";
 
-  // helper reset video state
+  if (titleEl) titleEl.textContent = currentPost.title || "Player";
+  if (descEl) descEl.textContent = currentPost.description || "";
+
+  // ===== server buttons (only show if > 1) =====
+  function renderServerButtons(activeIndex){
+    if (!serverBar) return;
+    serverBar.innerHTML = "";
+    if (streams.length <= 1) {
+      serverBar.style.display = "none";
+      return;
+    }
+    serverBar.style.display = "flex";
+
+    streams.forEach((s, idx) => {
+      const btn = document.createElement("div");
+      btn.className = "serverBtn" + (idx === activeIndex ? " active" : "");
+      btn.innerHTML = `
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M6.5 7.5h11M6.5 12h11M6.5 16.5h11" stroke="rgba(255,255,255,.92)" stroke-width="1.7" stroke-linecap="round"/>
+        </svg>
+        <span>${esc(s.label || ("Server " + (idx+1)))}</span>
+      `;
+      btn.onclick = () => setSource(idx);
+      serverBar.appendChild(btn);
+    });
+  }
+
+  // ===== media switching =====
   function resetVideo() {
     try { video.pause(); } catch {}
     try { video.removeAttribute("src"); } catch {}
     try { video.load(); } catch {}
   }
 
-  if (useVideo) {
-    if (frameWrap) frameWrap.style.display = "none";
-    if (frame) frame.src = "";
-    if (video) video.style.display = "block";
+  let hlsInstance = null;
 
-    if (isHls(url)) {
-      // Safari/iOS native HLS
-      if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = url;
-      } else if (window.Hls) {
-        const hls = new Hls({ lowLatencyMode: true });
-        hls.loadSource(url);
-        hls.attachMedia(video);
-      } else {
-        // fallback ke iframe kalau ga ada hls.js
-        resetVideo();
-        video.style.display = "none";
-        if (frameWrap && frame) {
-          frameWrap.style.display = "block";
-          frame.src = url;
+  function setSource(index){
+    const s = streams[index];
+    const url = (s?.url || "").trim();
+    if (!url) return;
+
+    renderServerButtons(index);
+
+    const useVideo = isHls(url) || isDirectVideo(url);
+
+    // clean old hls
+    if (hlsInstance) { try { hlsInstance.destroy(); } catch {} }
+    hlsInstance = null;
+
+    if (useVideo) {
+      if (frameWrap) frameWrap.style.display = "none";
+      if (frame) frame.src = "";
+      if (video) video.style.display = "block";
+
+      if (isHls(url)) {
+        if (video.canPlayType("application/vnd.apple.mpegurl")) {
+          video.src = url;
+        } else if (window.Hls) {
+          hlsInstance = new Hls({ lowLatencyMode: true });
+          hlsInstance.loadSource(url);
+          hlsInstance.attachMedia(video);
+        } else {
+          // fallback to iframe
+          resetVideo();
+          video.style.display = "none";
+          if (frameWrap && frame) {
+            frameWrap.style.display = "block";
+            frame.src = url;
+          }
         }
+      } else {
+        video.src = url;
       }
     } else {
-      video.src = url;
+      // iframe for any page url
+      if (video) {
+        resetVideo();
+        video.style.display = "none";
+      }
+      if (frameWrap && frame) {
+        frameWrap.style.display = "block";
+        frame.src = url;
+      }
     }
-  } else {
-    // iframe untuk URL halaman apa pun
-    if (video) {
-      resetVideo();
-      video.style.display = "none";
+  }
+
+  // start with first server
+  setSource(0);
+
+  // ===== genres dropdown data (from /api/posts) =====
+  let allPosts = Array.isArray(allPostsData?.posts) ? allPostsData.posts : [];
+  if (!allPosts.length) {
+    const again = await apiGet("/api/posts");
+    allPosts = Array.isArray(again?.posts) ? again.posts : [];
+  }
+
+  const genreSet = new Set();
+  allPosts.forEach(p => {
+    const g = (p.genre || "").trim();
+    if (g) genreSet.add(g);
+  });
+  const genres = ["All", ...Array.from(genreSet).sort((a,b)=>a.localeCompare(b))];
+
+  function renderGenres(active = "All"){
+    if (!genreList) return;
+    genreList.innerHTML = "";
+    genres.forEach(g => {
+      const b = document.createElement("button");
+      b.className = "genreBtn" + (g === active ? " active" : "");
+      b.textContent = g;
+      b.onclick = () => {
+        closeMenu();
+        // go back to index with a simple query hint
+        if (g === "All") location.href = "/";
+        else location.href = "/?genre=" + encodeURIComponent(g);
+      };
+      genreList.appendChild(b);
+    });
+  }
+  renderGenres("All");
+
+  // ===== search (redirect to index with q) =====
+  clearFilterBtn && (clearFilterBtn.onclick = () => {
+    if (searchInput) searchInput.value = "";
+    location.href = "/";
+  });
+  searchInput && searchInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      const q = (searchInput.value || "").trim();
+      if (!q) location.href = "/";
+      else location.href = "/?q=" + encodeURIComponent(q);
     }
-    if (frameWrap && frame) {
-      frameWrap.style.display = "block";
-      frame.src = url;
+  });
+
+  // ===== related: random 10 exclude current =====
+  function shuffle(arr){
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
     }
+    return arr;
+  }
+
+  const currentId = currentPost.id || wantedId || null;
+  const pool = allPosts.filter(p => p && p.id && p.id !== currentId);
+
+  const picks = shuffle(pool).slice(0, 10);
+  if (relatedMeta) relatedMeta.textContent = picks.length ? `Showing ${picks.length}` : "No posts";
+
+  if (relatedGrid) {
+    relatedGrid.innerHTML = "";
+    picks.forEach(p => {
+      const mins = p.minutes ?? p.durationMinutes ?? p.duration ?? null;
+      const g = p.genre || "-";
+      const d = p.description || "-";
+      const a = document.createElement("a");
+      a.className = "post";
+      a.href = `/player.html?id=${encodeURIComponent(p.id)}`;
+      a.innerHTML = `
+        <div class="thumb">
+          <img src="${esc(p.poster || 'https://via.placeholder.com/900x1600?text=Poster')}" alt="${esc(p.title || 'Poster')}" loading="lazy" />
+          <div class="thumbOverlay">
+            <div class="playPill">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M10 8.5v7l7-3.5-7-3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linejoin="round"/>
+              </svg>
+              <span>Play</span>
+            </div>
+            <div class="tTitle">${esc(p.title || "Untitled")}</div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="line1">
+            <span class="tagMini">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3.5c4.7 0 8.5 3.8 8.5 8.5S16.7 20.5 12 20.5 3.5 16.7 3.5 12 7.3 3.5 12 3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+                <path d="M12 7.6v5.2l3.2 2" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span>${mins ? esc(String(mins)) + " min" : "-"}</span>
+            </span>
+
+            <span class="tagMini">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6.5 7.5h11M6.5 12h11M6.5 16.5h11" stroke="rgba(255,255,255,.92)" stroke-width="1.7" stroke-linecap="round"/>
+              </svg>
+              <span>${esc(g)}</span>
+            </span>
+          </div>
+          <div class="descClamp">${esc(d)}</div>
+        </div>
+      `;
+      relatedGrid.appendChild(a);
+    });
   }
 })();
 
