@@ -3,27 +3,825 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Stream</title>
-  <link rel="stylesheet" href="style.css" />
+  <title>SemiJepangHD</title>
+  <meta name="color-scheme" content="dark" />
+  <style>
+    :root{
+      --bg:#0b0c10;
+      --panel: rgba(18,19,26,.72);
+      --panel2: rgba(15,16,22,.82);
+      --text:#e8e8ee;
+      --muted:#a8a8b3;
+      --stroke: rgba(255,255,255,.10);
+      --shadow: 0 18px 70px rgba(0,0,0,.40);
+      --accent1: rgba(255,0,80,.92);
+      --accent2: rgba(120,90,255,.85);
+      --danger: rgba(255,64,64,.95);
+    }
+
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(255,0,80,.18), transparent 55%),
+        radial-gradient(1000px 600px at 95% 10%, rgba(120,90,255,.16), transparent 55%),
+        var(--bg);
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+
+    /* Header */
+    header{
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: linear-gradient(to bottom, rgba(11,12,16,.86), rgba(11,12,16,.58), transparent);
+      backdrop-filter: blur(10px);
+      padding: 10px 0 12px;
+    }
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      min-width: 210px;
+    }
+    .logo{
+      width:40px;height:40px;border-radius:14px;
+      background: linear-gradient(145deg, var(--accent1), var(--accent2));
+      box-shadow: var(--shadow);
+      display:grid;place-items:center;
+      overflow:hidden;
+    }
+    .logo svg{width:24px;height:24px;opacity:.95}
+    .brandTitle{
+      display:flex;flex-direction:column;gap:1px;
+      line-height:1.05;
+    }
+    .brandTitle b{font-size:15px;letter-spacing:.2px}
+    .brandTitle span{font-size:12px;color:var(--muted)}
+    .actions{
+      display:flex;align-items:center;gap:10px;
+    }
+    .iconBtn{
+      width:42px;height:42px;border-radius:14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      display:grid;place-items:center;
+      cursor:pointer;
+    }
+    .iconBtn svg{width:18px;height:18px;opacity:.92}
+    .iconBtn:active{transform: translateY(1px)}
+    .searchRow{
+      display:none;
+      margin-top: 10px;
+      gap:10px;
+      align-items:center;
+    }
+    .searchRow.show{display:flex}
+    .searchInput{
+      flex:1;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke);
+      background: rgba(15,16,22,.9);
+      color: var(--text);
+      outline:none;
+    }
+    .searchInput:focus{box-shadow: 0 0 0 4px rgba(255,0,80,.08)}
+    .chip{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 13px;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+
+    /* Menu dropdown (from top) */
+    .menuPanel{
+      position: fixed;
+      left: 0; right: 0;
+      top: 0;
+      z-index: 30;
+      transform: translate3d(0,-110%,0);
+      opacity: 0;
+      pointer-events: none;
+      will-change: transform, opacity;
+      transition: transform 240ms cubic-bezier(.22,.85,.22,1), opacity 200ms ease;
+    }
+    .menuPanel.open{
+      transform: translate3d(0,0,0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .menuInner{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 16px 16px;
+    }
+    .menuCard{
+      background: rgba(12,13,18,.92);
+      border:1px solid var(--stroke);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+      overflow:hidden;
+    }
+    .menuHead{
+      display:flex;align-items:center;justify-content:space-between;
+      padding: 12px 12px;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .menuHead b{font-size:13px;letter-spacing:.2px}
+    .menuClose{
+      width:40px;height:40px;border-radius:14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      display:grid;place-items:center;
+      cursor:pointer;
+    }
+    .menuClose svg{width:18px;height:18px;opacity:.92}
+    .genres{
+      padding: 12px;
+      display:flex;
+      flex-wrap: wrap;
+      gap:10px;
+    }
+    .genreBtn{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      padding: 9px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      cursor:pointer;
+    }
+    .genreBtn.active{
+      border-color: rgba(255,255,255,.20);
+      background: rgba(255,0,80,.10);
+    }
+    .menuBackdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      opacity: 0;
+      pointer-events:none;
+      transition: opacity 200ms ease;
+      z-index: 29;
+    }
+    .menuBackdrop.open{opacity: 1; pointer-events:auto;}
+
+    /* Main */
+    .sectionHead{
+      display:flex;align-items:flex-end;justify-content:space-between;
+      gap:12px;
+      margin: 12px 0 10px;
+    }
+    .sectionHead h2{margin:0;font-size:14px;letter-spacing:.2px}
+    .sectionHead .meta{color:var(--muted);font-size:12px}
+
+    /* Grid 2 columns */
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    @media (max-width: 720px){
+      .grid{gap: 12px}
+    }
+
+    .card{
+      background: var(--panel);
+      border:1px solid var(--stroke);
+      border-radius: 18px;
+      overflow:hidden;
+      box-shadow: 0 14px 50px rgba(0,0,0,.32);
+      backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
+      min-height: 100%;
+    }
+    .thumb{
+      width:100%;
+      aspect-ratio: 9 / 16;
+      background:#000;
+      position:relative;
+      overflow:hidden;
+    }
+    .thumb img{
+      width:100%;height:100%;
+      object-fit:cover;display:block;
+      filter: saturate(1.06) contrast(1.05);
+    }
+    .thumbOverlay{
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,.10) 55%, transparent);
+      display:flex;flex-direction:column;justify-content:flex-end;
+      padding: 12px;
+    }
+    .playPill{
+      position:absolute; top:10px; left:10px;
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.30);
+      font-size: 12px;
+    }
+    .playPill svg{width:14px;height:14px}
+    .tTitle{
+      font-weight:900;
+      font-size: 13px;
+      line-height: 1.2;
+      text-shadow: 0 12px 30px rgba(0,0,0,.55);
+    }
+
+    .info{
+      padding: 12px 12px 13px;
+      display:flex;
+      flex-direction:column;
+      gap: 8px;
+    }
+    .line1{
+      display:flex;
+      gap:10px;
+      flex-wrap: wrap;
+      align-items:center;
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+    }
+    .tagMini{
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+    }
+    .tagMini svg{width:14px;height:14px;opacity:.92}
+    .desc{
+      font-size: 12px;
+      color: rgba(255,255,255,.72);
+      line-height: 1.35;
+      display:-webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow:hidden;
+    }
+
+    /* Pagination */
+    .pager{
+      display:flex;justify-content:center;align-items:center;gap:10px;
+      margin-top: 14px;
+    }
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+    }
+    .btn svg{width:16px;height:16px;opacity:.92}
+    .btn[aria-disabled="true"]{
+      opacity:.45;
+      pointer-events:none;
+    }
+
+    /* Footer */
+    footer{
+      margin-top: 22px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 16px;
+      color: rgba(255,255,255,.72);
+      font-size: 12px;
+      display:flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items:center;
+      justify-content:space-between;
+    }
+    .footLeft{
+      display:flex;align-items:center;gap:10px;
+    }
+    .footLogo{
+      width:34px;height:34px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      display:grid;place-items:center;
+    }
+    .footLogo svg{width:18px;height:18px;opacity:.92}
+    .footRight{
+      display:flex;gap:12px;flex-wrap: wrap;align-items:center;
+    }
+    .footLink{
+      display:inline-flex;gap:8px;align-items:center;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.03);
+    }
+    .footLink svg{width:14px;height:14px;opacity:.92}
+
+    /* Age Gate */
+    .gate{
+      position: fixed; inset: 0;
+      z-index: 50;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.70);
+      backdrop-filter: blur(10px);
+      padding: 18px;
+    }
+    .gate.show{display:flex}
+    .gateCard{
+      width: min(520px, 100%);
+      background: rgba(12,13,18,.92);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 14px;
+    }
+    .gateHead{
+      display:flex;align-items:center;gap:10px;
+      margin-bottom: 10px;
+    }
+    .gateIcon{
+      width:44px;height:44px;border-radius:16px;
+      background: linear-gradient(145deg, var(--accent1), var(--accent2));
+      display:grid;place-items:center;
+    }
+    .gateIcon svg{width:22px;height:22px;opacity:.95}
+    .gateCard h3{margin:0;font-size:14px;letter-spacing:.2px}
+    .gateCard p{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.4}
+    .gateActions{display:flex;gap:10px;margin-top:12px}
+    .gateBtn{
+      flex:1;
+      display:flex;align-items:center;justify-content:center;gap:8px;
+      padding: 11px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      font-weight: 800;
+    }
+    .gateBtn.primary{
+      border-color: transparent;
+      background: linear-gradient(145deg, var(--accent1), var(--accent2));
+    }
+    .gateBtn.danger{
+      border-color: transparent;
+      background: var(--danger);
+    }
+    .gateBtn svg{width:16px;height:16px;opacity:.92}
+
+  </style>
 </head>
 <body>
-  <main class="wrap">
-    <h1 id="pageTitle">Loading...</h1>
-    <p class="sub" id="updated"></p>
 
-    <a class="poster" id="posterLink" href="player.html">
-      <img id="posterImg" alt="Poster" />
-      <div class="overlay">
-        <div class="badge">LIVE</div>
-        <div class="posterTitle" id="posterTitle"></div>
+  <!-- Age Gate -->
+  <div class="gate" id="ageGate" role="dialog" aria-modal="true">
+    <div class="gateCard">
+      <div class="gateHead">
+        <div class="gateIcon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3.5c4.4 0 8 3.6 8 8s-3.6 8-8 8-8-3.6-8-8 3.6-8 8-8Z" stroke="rgba(255,255,255,.92)" stroke-width="1.8"/>
+            <path d="M12 7v6" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="M12 16.6h.01" stroke="rgba(255,255,255,.92)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h3>Age Confirmation</h3>
+          <p>Confirm you are 18+ to continue.</p>
+        </div>
       </div>
-    </a>
 
-    <p class="sub" style="margin-top:12px">
-      Admin: <code>/admin.html</code>
-    </p>
+      <div class="gateActions">
+        <button class="gateBtn primary" id="ageYes">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M10.5 16.5 7 13l1.5-1.5 2 2L15.5 8.5 17 10l-6.5 6.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>I am 18+</span>
+        </button>
+        <button class="gateBtn danger" id="ageNo">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 7 17 17M17 7 7 17" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round"/>
+          </svg>
+          <span>Leave</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu -->
+  <div class="menuBackdrop" id="menuBackdrop"></div>
+  <div class="menuPanel" id="menuPanel" aria-hidden="true">
+    <div class="menuInner">
+      <div class="menuCard">
+        <div class="menuHead">
+          <b>Genres</b>
+          <button class="menuClose" id="menuClose" aria-label="Close menu">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 7 17 17M17 7 7 17" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+        <div class="genres" id="genreList"></div>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo" aria-hidden="true">
+            <!-- Torii-like Japanese logo -->
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 7h14" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M7 9h10" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M8 9v12M16 9v12" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+              <path d="M10.5 13.5h3" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brandTitle">
+            <b>SemiJepangHD</b>
+            <span>Latest posts</span>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="iconBtn" id="searchBtn" aria-label="Search">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M10.8 18.2a7.4 7.4 0 1 1 0-14.8 7.4 7.4 0 0 1 0 14.8Z" stroke="rgba(255,255,255,.92)" stroke-width="1.7"/>
+              <path d="M16.6 16.6 21 21" stroke="rgba(255,255,255,.92)" stroke-width="1.7" stroke-linecap="round"/>
+            </svg>
+          </button>
+
+          <button class="iconBtn" id="menuBtn" aria-label="Menu">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M5 7h14M5 12h14M5 17h14" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="searchRow" id="searchRow">
+        <input class="searchInput" id="searchInput" placeholder="Search title, genre, description" />
+        <button class="chip" id="clearFilterBtn">Clear</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="sectionHead">
+      <h2 id="sectionTitle">Browse</h2>
+      <div class="meta" id="metaInfo">Loading...</div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="pager">
+      <div class="btn" id="prevBtn" aria-disabled="true">
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M14 7 9 12l5 5" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>Prev</span>
+      </div>
+      <div class="btn" id="nextBtn" aria-disabled="true">
+        <span>Next</span>
+        <svg viewBox="0 0 24 24" fill="none">
+          <path d="M10 7l5 5-5 5" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+
+    <footer>
+      <div class="footLeft">
+        <div class="footLogo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 4.5c4.1 0 7.5 3.4 7.5 7.5S16.1 19.5 12 19.5 4.5 16.1 4.5 12 7.9 4.5 12 4.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.8"/>
+            <path d="M12 8.2v7.6" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-weight:900; letter-spacing:.2px">SemiJepangHD</div>
+          <div style="color:rgba(255,255,255,.62); margin-top:2px">© <span id="year"></span> • All rights reserved</div>
+        </div>
+      </div>
+
+      <div class="footRight">
+        <div class="footLink">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M12 3.5c4.7 0 8.5 3.8 8.5 8.5S16.7 20.5 12 20.5 3.5 16.7 3.5 12 7.3 3.5 12 3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+            <path d="M12 7.6v5.2l3.2 2" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>Fast updates</span>
+        </div>
+        <div class="footLink">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6.5 7.5h11M6.5 12h11M6.5 16.5h11" stroke="rgba(255,255,255,.92)" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+          <span>Curated list</span>
+        </div>
+      </div>
+    </footer>
   </main>
 
-  <script src="app.js"></script>
+  <script>
+    const PAGE_SIZE = 10;
+
+    let allPosts = [];
+    let filtered = [];
+    let currentId = null;
+
+    let page = 0;
+    let activeGenre = "All";
+    let query = "";
+
+    const grid = document.getElementById("grid");
+    const metaInfo = document.getElementById("metaInfo");
+    const sectionTitle = document.getElementById("sectionTitle");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const searchBtn = document.getElementById("searchBtn");
+    const searchRow = document.getElementById("searchRow");
+    const searchInput = document.getElementById("searchInput");
+    const clearFilterBtn = document.getElementById("clearFilterBtn");
+
+    const menuBtn = document.getElementById("menuBtn");
+    const menuPanel = document.getElementById("menuPanel");
+    const menuBackdrop = document.getElementById("menuBackdrop");
+    const menuClose = document.getElementById("menuClose");
+    const genreList = document.getElementById("genreList");
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function esc(s){
+      return String(s)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+
+    async function apiGet(path){
+      const res = await fetch(path, { cache: "no-store" });
+      if (!res.ok) return null;
+      return res.json();
+    }
+
+    function getText(post){
+      const t = (post.title || "") + " " + (post.genre || "") + " " + (post.description || "");
+      return t.toLowerCase();
+    }
+
+    function applyFilter(){
+      const q = query.trim().toLowerCase();
+
+      filtered = allPosts.filter(p => {
+        const gOk = (activeGenre === "All") ? true : ((p.genre || "").toLowerCase() === activeGenre.toLowerCase());
+        const qOk = q ? getText(p).includes(q) : true;
+        return gOk && qOk;
+      });
+
+      page = 0;
+      render();
+      renderGenres();
+    }
+
+    function render(){
+      // header meta
+      const total = filtered.length;
+      const maxPage = Math.max(0, Math.ceil(total / PAGE_SIZE) - 1);
+      page = Math.min(page, maxPage);
+
+      const start = page * PAGE_SIZE;
+      const end = Math.min(start + PAGE_SIZE, total);
+      const items = filtered.slice(start, end);
+
+      sectionTitle.textContent = activeGenre === "All" ? "Browse" : ("Genre: " + activeGenre);
+      metaInfo.textContent = total ? (`Showing ${start+1}-${end} of ${total}`) : "No posts";
+
+      // pager
+      prevBtn.setAttribute("aria-disabled", String(page === 0));
+      nextBtn.setAttribute("aria-disabled", String(page >= maxPage));
+
+      // cards
+      grid.innerHTML = "";
+      items.forEach(p => {
+        const minutes = (p.durationMinutes ?? p.minutes ?? p.duration ?? null);
+        const genre = (p.genre || "-");
+        const desc = (p.description || "-");
+
+        const card = document.createElement("a");
+        card.className = "card";
+        card.href = `/player.html?id=${encodeURIComponent(p.id || "")}`;
+
+        const featuredBadge = (p.id && currentId && p.id === currentId)
+          ? `<span style="margin-left:8px; font-size:12px; color:rgba(255,255,255,.78)">Featured</span>`
+          : "";
+
+        card.innerHTML = `
+          <div class="thumb">
+            <img src="${esc(p.poster || 'https://via.placeholder.com/900x1600?text=Poster')}" alt="${esc(p.title || 'Poster')}" loading="lazy" />
+            <div class="thumbOverlay">
+              <div class="playPill">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M10 8.5v7l7-3.5-7-3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linejoin="round"/>
+                </svg>
+                <span>Play</span>
+              </div>
+              <div class="tTitle">${esc(p.title || "Untitled")}${featuredBadge}</div>
+            </div>
+          </div>
+
+          <div class="info">
+            <div class="line1">
+              <span class="tagMini">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M12 3.5c4.7 0 8.5 3.8 8.5 8.5S16.7 20.5 12 20.5 3.5 16.7 3.5 12 7.3 3.5 12 3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+                  <path d="M12 7.6v5.2l3.2 2" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>${minutes ? esc(String(minutes)) + " min" : "-"}</span>
+              </span>
+
+              <span class="tagMini">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M6.5 7.5h11M6.5 12h11M6.5 16.5h11" stroke="rgba(255,255,255,.92)" stroke-width="1.7" stroke-linecap="round"/>
+                </svg>
+                <span>${esc(genre)}</span>
+              </span>
+            </div>
+
+            <div class="desc">${esc(desc)}</div>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    function collectGenres(posts){
+      const set = new Set();
+      posts.forEach(p => {
+        const g = (p.genre || "").trim();
+        if (g) set.add(g);
+      });
+      return ["All", ...Array.from(set).sort((a,b)=>a.localeCompare(b))];
+    }
+
+    function renderGenres(){
+      const genres = collectGenres(allPosts);
+
+      genreList.innerHTML = "";
+      genres.forEach(g => {
+        const btn = document.createElement("button");
+        btn.className = "genreBtn" + (g === activeGenre ? " active" : "");
+        btn.textContent = g;
+        btn.onclick = () => {
+          activeGenre = g;
+          closeMenu();
+          applyFilter();
+        };
+        genreList.appendChild(btn);
+      });
+    }
+
+    // Menu open/close
+    function openMenu(){
+      menuPanel.classList.add("open");
+      menuBackdrop.classList.add("open");
+      // “halus” (transform + will-change), browser bakal ngejar fps tinggi kalau device kuat
+      menuPanel.setAttribute("aria-hidden","false");
+    }
+    function closeMenu(){
+      menuPanel.classList.remove("open");
+      menuBackdrop.classList.remove("open");
+      menuPanel.setAttribute("aria-hidden","true");
+    }
+
+    menuBtn.onclick = openMenu;
+    menuClose.onclick = closeMenu;
+    menuBackdrop.onclick = closeMenu;
+
+    // Search toggle
+    searchBtn.onclick = () => {
+      searchRow.classList.toggle("show");
+      if (searchRow.classList.contains("show")) {
+        setTimeout(()=>searchInput.focus(), 0);
+      }
+    };
+
+    searchInput.addEventListener("input", (e) => {
+      query = e.target.value || "";
+      applyFilter();
+    });
+
+    clearFilterBtn.onclick = () => {
+      query = "";
+      activeGenre = "All";
+      searchInput.value = "";
+      applyFilter();
+    };
+
+    // Pager
+    prevBtn.onclick = () => {
+      if (prevBtn.getAttribute("aria-disabled") === "true") return;
+      page = Math.max(0, page - 1);
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+    nextBtn.onclick = () => {
+      if (nextBtn.getAttribute("aria-disabled") === "true") return;
+      page = page + 1;
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
+    // Player page expects /api/stream (featured). We want click card to play THIS post:
+    // Minimal approach: store clicked post in localStorage, then player reads it (optional).
+    // For now we just open player.html and player will play featured unless you want per-id play.
+    // If you want per-id play, tell me—gue add support 1 file patch kecil.
+
+    async function boot(){
+      const data = await apiGet("/api/posts");
+      if (!data) {
+        metaInfo.textContent = "Failed to load";
+        return;
+      }
+
+      currentId = data.currentId || null;
+      allPosts = Array.isArray(data.posts) ? data.posts : [];
+
+      // If you want featured always on top:
+      if (currentId) {
+        allPosts.sort((a,b)=>{
+          if (a.id === currentId) return -1;
+          if (b.id === currentId) return 1;
+          return (b.createdAt || "").localeCompare(a.createdAt || "");
+        });
+      }
+
+      filtered = [...allPosts];
+      renderGenres();
+      applyFilter();
+    }
+
+    /* =========================
+       Age Gate (once per day)
+    ========================= */
+    const ageGate = document.getElementById("ageGate");
+    const ageYes = document.getElementById("ageYes");
+    const ageNo = document.getElementById("ageNo");
+
+    function todayKey(){
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
+      return `${y}-${m}-${day}`;
+    }
+
+    function shouldShowGate(){
+      const last = localStorage.getItem("SJHD_AGE_OK_DATE");
+      return last !== todayKey();
+    }
+
+    function passGate(){
+      localStorage.setItem("SJHD_AGE_OK_DATE", todayKey());
+      ageGate.classList.remove("show");
+      boot();
+    }
+
+    function blockGate(){
+      // redirect to blank / safe page
+      window.location.href = "about:blank";
+    }
+
+    ageYes.onclick = passGate;
+    ageNo.onclick = blockGate;
+
+    // start
+    if (shouldShowGate()) {
+      ageGate.classList.add("show");
+    } else {
+      boot();
+    }
+  </script>
+
 </body>
-</html>
+              </html>
