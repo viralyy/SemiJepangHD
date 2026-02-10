@@ -4,19 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Admin Panel</title>
-
   <style>
     :root{
       --bg:#0b0c10;
-      --card:#12131a;
-      --card2:#0f1016;
+      --card: rgba(18,19,26,.75);
       --text:#e8e8ee;
       --muted:#a8a8b3;
       --stroke: rgba(255,255,255,.10);
-      --accent: rgba(255,0,80,.92);
+      --shadow: 0 18px 70px rgba(0,0,0,.35);
+      --accent1: rgba(255,0,80,.92);
+      --accent2: rgba(120,90,255,.85);
       --danger: rgba(255,64,64,.95);
-      --ok: rgba(80, 210, 140, .95);
-      --shadow: 0 20px 70px rgba(0,0,0,.55);
     }
     *{box-sizing:border-box}
     html,body{height:100%}
@@ -29,46 +27,42 @@
         var(--bg);
       color:var(--text);
     }
-    a{color:inherit}
+    a{color:inherit; text-decoration:none}
     .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 40px}
     .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
     .brand{display:flex;align-items:center;gap:10px}
     .logo{
       width:42px;height:42px;border-radius:14px;
-      background: linear-gradient(145deg, rgba(255,0,80,.95), rgba(120,90,255,.85));
-      box-shadow: var(--shadow);
-      position:relative;overflow:hidden;
-    }
-    .logo::after{
-      content:"";position:absolute;inset:-30%;
-      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35), transparent 45%);
-      transform: rotate(12deg);
+      background: linear-gradient(145deg, var(--accent1), var(--accent2));
+      box-shadow: 0 18px 60px rgba(0,0,0,.55);
+      display:grid;place-items:center;
     }
     .brand h1{margin:0;font-size:16px;line-height:1.1;letter-spacing:.2px}
     .brand p{margin:2px 0 0;color:var(--muted);font-size:12px}
-    .top-actions{display:flex;gap:10px;align-items:center}
-    .pill{
-      font-size:11px;color:rgba(255,255,255,.85);
+    .actions{display:flex;gap:10px;align-items:center}
+    .chip{
+      display:flex;align-items:center;gap:8px;
+      font-size:12px;color:rgba(255,255,255,.88);
       border:1px solid rgba(255,255,255,.12);
-      padding:6px 10px;border-radius:999px;
+      padding:8px 10px;border-radius:999px;
       background: rgba(255,255,255,.04);
-      text-decoration:none;
-      user-select:none;
     }
+    .chip svg{width:16px;height:16px;opacity:.92}
 
     .grid{display:grid;grid-template-columns:1fr 1.1fr;gap:14px}
     @media (max-width:980px){.grid{grid-template-columns:1fr}}
 
     .card{
-      background: rgba(18,19,26,.75);
+      background: var(--card);
       border: 1px solid var(--stroke);
       border-radius: 18px;
       padding: 14px;
-      box-shadow: 0 18px 70px rgba(0,0,0,.35);
+      box-shadow: var(--shadow);
       backdrop-filter: blur(10px);
     }
     .card h2{margin:0 0 10px;font-size:14px;letter-spacing:.2px}
     .sub{margin:0;color:var(--muted);font-size:12px}
+
     label{display:block;margin:10px 0 6px;font-size:12px;color:var(--muted)}
     input,button{
       width:100%;
@@ -84,38 +78,39 @@
       border-color: rgba(255,255,255,.18);
       box-shadow: 0 0 0 4px rgba(255,0,80,.08);
     }
-    button{
-      cursor:pointer;font-weight:800;letter-spacing:.2px;
-      background: linear-gradient(145deg, rgba(255,0,80,.92), rgba(120,90,255,.85));
-      border-color: transparent;
-    }
-    button:disabled{opacity:.55;cursor:not-allowed}
-    .btn-ghost{background:transparent;border:1px solid var(--stroke);font-weight:700}
-    .btn-danger{background: var(--danger); border-color: transparent}
-
     .row{display:flex;gap:10px;align-items:center}
     .row > *{flex:1}
 
-    .poster{
-      width:100%;aspect-ratio: 9 / 16;
-      border-radius:16px;overflow:hidden;position:relative;
-      background:#000;border:1px solid var(--stroke);
+    button{
+      cursor:pointer;
+      font-weight:800;
+      letter-spacing:.2px;
+      border-color: transparent;
+      background: linear-gradient(145deg, var(--accent1), var(--accent2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
     }
-    .poster img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(1.05) contrast(1.05)}
-    .overlay{
-      position:absolute;inset:0;
-      display:flex;flex-direction:column;justify-content:flex-end;
-      padding:14px;
-      background: linear-gradient(to top, rgba(0,0,0,.72), rgba(0,0,0,.10) 55%, transparent);
+    button svg{width:16px;height:16px}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .btn-ghost{
+      background: transparent;
+      border: 1px solid var(--stroke);
+      font-weight:700;
     }
-    .badge{
-      position:absolute;top:12px;left:12px;
-      font-size:11px;font-weight:900;
-      padding:6px 10px;border-radius:999px;
-      background: var(--accent);
+    .btn-danger{
+      background: var(--danger);
+      border-color: transparent;
     }
-    .posterTitle{font-size:16px;font-weight:900;line-height:1.1;text-shadow:0 10px 30px rgba(0,0,0,.6)}
-    .hint{font-size:12px;color: rgba(255,255,255,.85);margin-top:6px}
+
+    .status{margin-top:10px;font-size:12px;color:var(--muted);min-height:18px}
+    .status.ok{color: rgba(160,255,205,.92)}
+    .status.err{color: rgba(255,170,170,.92)}
+    .status.warn{color: rgba(255,220,160,.92)}
+    .hidden{display:none}
+
+    .hr{border:0;border-top:1px solid rgba(255,255,255,.10);margin:14px 0}
 
     .history{display:flex;flex-direction:column;gap:10px;margin-top:10px}
     .item{border:1px solid var(--stroke);border-radius:16px;padding:12px;background: rgba(15,16,22,.55)}
@@ -127,16 +122,12 @@
       border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.04);
       white-space:nowrap;
+      display:flex;align-items:center;gap:6px;
     }
+    .tag svg{width:14px;height:14px;opacity:.92}
     .btns{display:flex;gap:8px;margin-top:10px}
     .btns button{flex:1}
 
-    .hr{border:0;border-top:1px solid rgba(255,255,255,.10);margin:14px 0}
-    .status{margin-top:10px;font-size:12px;color:var(--muted);min-height:18px}
-    .status.ok{color: rgba(160,255,205,.92)}
-    .status.err{color: rgba(255,170,170,.92)}
-    .status.warn{color: rgba(255,220,160,.92)}
-    .hidden{display:none}
     code{
       background: rgba(255,255,255,.05);
       border:1px solid rgba(255,255,255,.08);
@@ -145,41 +136,58 @@
     }
   </style>
 </head>
-
 <body>
   <main class="wrap">
     <div class="topbar">
       <div class="brand">
-        <div class="logo" aria-hidden="true"></div>
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M7 7.5c0-2 1.8-3.5 5-3.5s5 1.5 5 3.5-1.8 3.5-5 3.5-5-1.5-5-3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/>
+            <path d="M5 19.5c.8-3.8 3.2-5.7 7-5.7s6.2 1.9 7 5.7" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
         <div>
           <h1>Admin Panel</h1>
+          <p>Publish • History • Featured</p>
         </div>
       </div>
-      <div class="top-actions">
-        <a class="pill" href="/">Open Index</a>
-        <a class="pill" href="/player.html">Open Player</a>
+
+      <div class="actions">
+        <a class="chip" href="/" title="Open Index">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M4 11.5 12 4l8 7.5V20a1.5 1.5 0 0 1-1.5 1.5H5.5A1.5 1.5 0 0 1 4 20v-8.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span>Open Index</span>
+        </a>
+        <a class="chip" href="/player.html" title="Open Player">
+          <svg viewBox="0 0 24 24" fill="none"><path d="M8.5 7.5v9l8-4.5-8-4.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 4.5h14A2.5 2.5 0 0 1 21.5 7v10A2.5 2.5 0 0 1 19 19.5H5A2.5 2.5 0 0 1 2.5 17V7A2.5 2.5 0 0 1 5 4.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/></svg>
+          <span>Open Player</span>
+        </a>
       </div>
     </div>
 
     <!-- LOGIN -->
     <section class="card" id="loginBox">
-      <h2>Login Admin</h2>
-
+      <h2>Login</h2>
       <form id="loginForm" autocomplete="on">
         <label>Username</label>
-        <input id="username" name="username" autocomplete="username" placeholder="username" required />
-
+        <input id="username" name="username" autocomplete="username" required />
         <label>Password</label>
-        <input id="password" name="password" type="password" autocomplete="current-password" placeholder="password" required />
-
-        <div class="row" style="margin-top:10px">
-          <button type="submit">Login</button>
-          <button type="button" class="btn-ghost" id="clearSavedBtn">Clear Saved</button>
-        </div>
+        <input id="password" name="password" type="password" autocomplete="password" required />
 
         <label style="display:flex;gap:10px;align-items:center;margin-top:10px">
-          <input id="rememberMe" type="checkbox" style="width:auto;accent-color: var(--accent)" checked />
+          <input id="rememberMe" type="checkbox" style="width:auto;accent-color: var(--accent1)" checked />
+          <span class="sub">Remember on this device</span>
         </label>
+
+        <div class="row" style="margin-top:10px">
+          <button type="submit">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M10.5 16.5 7 13l1.5-1.5 2 2L15.5 8.5 17 10l-6.5 6.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Login</span>
+          </button>
+          <button type="button" class="btn-ghost" id="clearSavedBtn">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12M9 7V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8V7m-7 0 1 14h6l1-14" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/></svg>
+            <span>Clear Saved</span>
+          </button>
+        </div>
 
         <p class="status" id="loginStatus"></p>
       </form>
@@ -188,47 +196,47 @@
     <!-- PANEL -->
     <section class="grid hidden" id="panelGrid">
       <section class="card">
-        <h2>Publish Post Baru</h2>
-
+        <h2>Publish</h2>
         <form id="publishForm" autocomplete="off">
-          <label>Judul</label>
-          <input id="title" required placeholder="misal: Live DJ Set" />
+          <label>Title</label>
+          <input id="title" required />
 
-          <label>URL Poster (9:16)</label>
-          <input id="posterUrl" required placeholder="https://...jpg / png" />
+          <label>Poster URL</label>
+          <input id="posterUrl" required />
 
-          <label>URL Stream (.m3u8 / mp4)</label>
-          <input id="streamUrl" required placeholder="https://...m3u8" />
+          <label>Stream / Page URL</label>
+          <input id="streamUrl" required />
 
-          <button type="submit" style="margin-top:12px">Publish & Set Featured</button>
+          <button type="submit" style="margin-top:12px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <span>Publish</span>
+          </button>
 
           <div class="row" style="margin-top:10px">
-            <button type="button" class="btn-danger" id="clearFeaturedBtn">Clear Featured</button>
-            <button type="button" class="btn-ghost" id="logoutBtn">Logout</button>
+            <button type="button" class="btn-danger" id="clearFeaturedBtn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M7 7 17 17M17 7 7 17" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/></svg>
+              <span>Clear Featured</span>
+            </button>
+            <button type="button" class="btn-ghost" id="logoutBtn">
+              <svg viewBox="0 0 24 24" fill="none"><path d="M10 7V6a2.5 2.5 0 0 1 2.5-2.5H18A2.5 2.5 0 0 1 20.5 6v12A2.5 2.5 0 0 1 18 20.5h-5.5A2.5 2.5 0 0 1 10 18v-1" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/><path d="M13 12H3.5m0 0 2.8-2.8M3.5 12l2.8 2.8" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span>Logout</span>
+            </button>
           </div>
 
           <p class="status" id="panelStatus"></p>
         </form>
-
-        <hr class="hr" />
-
-        <h2>Poster Preview (9:16)</h2>
-        <div class="poster" style="margin-top:10px">
-          <img id="previewImg" alt="Poster preview" src="https://via.placeholder.com/900x1600?text=Poster+Preview" />
-          <div class="overlay">
-            <div class="badge">PREVIEW</div>
-            <div class="posterTitle" id="previewTitle">Judul Stream</div>
-            <div class="hint" id="previewHint">Isi form untuk update preview</div>
-          </div>
-        </div>
       </section>
 
       <section class="card">
         <div class="row" style="gap:10px; align-items:flex-end">
           <div>
-            <h2>History Post</h2>
+            <h2>History</h2>
+            <p class="sub">Set featured or delete</p>
           </div>
-          <button class="btn-ghost" id="refreshBtn" style="max-width:180px">Refresh</button>
+          <button class="btn-ghost" id="refreshBtn" style="max-width:180px">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-14.5 4.7M4 12A8 8 0 0 1 18.5 7.3" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/><path d="M20 8v4h-4M4 16v-4h4" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Refresh</span>
+          </button>
         </div>
 
         <div class="history" id="history">
@@ -239,15 +247,9 @@
   </main>
 
   <script>
-    // ====== Server-side credentials (Cloudflare Secrets) ======
-    // client hanya mengirim username/password ke server untuk dicek via secrets.
-    // jangan hardcode password di sini.
-
-    // ====== Storage keys ======
     const LS_AUTH = "ADMIN_AUTH";
-    const SESSION_AUTH = "ADMIN_AUTH_SESSION";
+    const SS_AUTH = "ADMIN_AUTH_SESSION";
 
-    // ====== DOM refs ======
     const loginBox = document.getElementById("loginBox");
     const panelGrid = document.getElementById("panelGrid");
 
@@ -269,16 +271,26 @@
     const posterUrlEl = document.getElementById("posterUrl");
     const streamUrlEl = document.getElementById("streamUrl");
 
-    const previewImg = document.getElementById("previewImg");
-    const previewTitle = document.getElementById("previewTitle");
-    const previewHint = document.getElementById("previewHint");
-
-    // ====== Helpers ======
     function setStatus(el, msg, type){
       el.classList.remove("ok","err","warn");
       if (type) el.classList.add(type);
       el.textContent = msg || "";
     }
+
+    function esc(s){
+      return String(s)
+        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
+    }
+
+    function saveLocal(auth){ localStorage.setItem(LS_AUTH, JSON.stringify(auth)); }
+    function loadLocal(){ try { return JSON.parse(localStorage.getItem(LS_AUTH) || "null"); } catch { return null; } }
+    function clearLocal(){ localStorage.removeItem(LS_AUTH); }
+
+    function saveSession(auth){ sessionStorage.setItem(SS_AUTH, JSON.stringify(auth)); }
+    function loadSession(){ try { return JSON.parse(sessionStorage.getItem(SS_AUTH) || "null"); } catch { return null; } }
+    function clearSession(){ sessionStorage.removeItem(SS_AUTH); }
+
     function showPanel(){
       loginBox.classList.add("hidden");
       panelGrid.classList.remove("hidden");
@@ -287,21 +299,12 @@
       panelGrid.classList.add("hidden");
       loginBox.classList.remove("hidden");
     }
-    function fmtTime(iso){
-      try { return new Date(iso).toLocaleString(); } catch { return ""; }
-    }
-    function esc(s){
-      return String(s)
-        .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-    }
 
     async function apiGet(path){
       const res = await fetch(path, { cache: "no-store" });
       if (!res.ok) return null;
       return res.json();
     }
-
     async function apiPost(path, body){
       const res = await fetch(path, {
         method: "POST",
@@ -312,55 +315,17 @@
       return { ok: res.ok, status: res.status, text };
     }
 
-    function saveLocalAuth(auth){
-      localStorage.setItem(LS_AUTH, JSON.stringify(auth));
-    }
-    function loadLocalAuth(){
-      try { return JSON.parse(localStorage.getItem(LS_AUTH) || "null"); } catch { return null; }
-    }
-    function clearLocalAuth(){
-      localStorage.removeItem(LS_AUTH);
-    }
-    function saveSessionAuth(auth){
-      sessionStorage.setItem(SESSION_AUTH, JSON.stringify(auth));
-    }
-    function loadSessionAuth(){
-      try { return JSON.parse(sessionStorage.getItem(SESSION_AUTH) || "null"); } catch { return null; }
-    }
-    function clearSessionAuth(){
-      sessionStorage.removeItem(SESSION_AUTH);
-    }
-
-    function getAuth(){
-      return loadSessionAuth();
-    }
-
-    // ===== Preview update =====
-    function updatePreview(){
-      const t = (titleEl.value || "Judul Stream").trim();
-      const img = (posterUrlEl.value || "").trim();
-      previewTitle.textContent = t || "Judul Stream";
-      previewHint.textContent = streamUrlEl.value.trim() ? "Siap publish ✔" : "Isi URL stream untuk publish";
-      if (img) previewImg.src = img;
-    }
-    ["input","change"].forEach(evt => {
-      titleEl.addEventListener(evt, updatePreview);
-      posterUrlEl.addEventListener(evt, updatePreview);
-      streamUrlEl.addEventListener(evt, updatePreview);
-    });
-
-    // ===== History =====
     async function loadHistory(){
       historyEl.innerHTML = '<div class="sub">Loading...</div>';
       const data = await apiGet("/api/posts");
       if (!data) {
-        historyEl.innerHTML = '<div class="sub">Gagal load history. Pastikan <code>/functions/api/posts.js</code> ada.</div>';
+        historyEl.innerHTML = '<div class="sub">Failed to load</div>';
         return;
       }
 
       const { currentId, posts } = data;
       if (!posts || posts.length === 0) {
-        historyEl.innerHTML = '<div class="sub">Belum ada post.</div>';
+        historyEl.innerHTML = '<div class="sub">No posts</div>';
         return;
       }
 
@@ -374,13 +339,22 @@
 
         const left = document.createElement("div");
         left.innerHTML = `
-          <div class="itemTitle">${esc(p.title || "(no title)")} ${p.id === currentId ? "⭐" : ""}</div>
-          <div class="meta">${fmtTime(p.createdAt)} • <code>${esc(p.id)}</code></div>
+          <div class="itemTitle">${esc(p.title || "(no title)")} ${p.id === currentId ? "★" : ""}</div>
+          <div class="meta"><code>${esc(p.id)}</code></div>
         `;
 
         const right = document.createElement("div");
-        const kind = (p.stream || "").endsWith(".m3u8") ? "HLS" : "FILE";
-        right.innerHTML = `<div class="tag">${kind}</div>`;
+        const isHls = (p.stream || "").toLowerCase().includes(".m3u8");
+        const isMp4 = (p.stream || "").toLowerCase().match(/\.(mp4|webm|ogg)(\?|#|$)/);
+        const tagLabel = isHls ? "HLS" : (isMp4 ? "VIDEO" : "PAGE");
+        const tagIcon = isHls
+          ? '<svg viewBox="0 0 24 24" fill="none"><path d="M4.5 7.5h15M4.5 12h15M4.5 16.5h15" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/></svg>'
+          : (isMp4
+            ? '<svg viewBox="0 0 24 24" fill="none"><path d="M9 8.5v7l7-3.5-7-3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linejoin="round"/><path d="M5 5.5h14A2.5 2.5 0 0 1 21.5 8v8A2.5 2.5 0 0 1 19 18.5H5A2.5 2.5 0 0 1 2.5 16V8A2.5 2.5 0 0 1 5 5.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6"/></svg>'
+            : '<svg viewBox="0 0 24 24" fill="none"><path d="M10 14a5 5 0 0 1 0-7l.6-.6a5 5 0 0 1 7 7l-.6.6" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/><path d="M14 10a5 5 0 0 1 0 7l-.6.6a5 5 0 0 1-7-7l.6-.6" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/></svg>'
+          );
+
+        right.innerHTML = `<div class="tag">${tagIcon}<span>${tagLabel}</span></div>`;
 
         top.appendChild(left);
         top.appendChild(right);
@@ -389,29 +363,34 @@
         btns.className = "btns";
 
         const setBtn = document.createElement("button");
-        setBtn.textContent = p.id === currentId ? "Featured" : "Set Featured";
+        setBtn.className = "btn-ghost";
         setBtn.disabled = (p.id === currentId);
+        setBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17.6 6.6 20.4l1-6.1-4.4-4.3 6.1-.9L12 3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linejoin="round"/></svg>
+          <span>${p.id === currentId ? "Featured" : "Set Featured"}</span>
+        `;
         setBtn.onclick = async () => {
-          const auth = getAuth();
-          if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
-
-          setStatus(panelStatus, "Setting featured...", "warn");
+          const auth = loadSession();
+          if (!auth) return setStatus(panelStatus, "Session expired", "err");
+          setStatus(panelStatus, "Working...", "warn");
           const r = await apiPost("/api/set-current", { ...auth, id: p.id });
-          setStatus(panelStatus, r.ok ? "✅ Featured updated" : `❌ ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
+          setStatus(panelStatus, r.ok ? "Done" : `Error: ${r.status}`, r.ok ? "ok" : "err");
           await loadHistory();
         };
 
         const delBtn = document.createElement("button");
         delBtn.className = "btn-danger";
-        delBtn.textContent = "Delete";
+        delBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none"><path d="M6 7h12M9 7V5.8A1.8 1.8 0 0 1 10.8 4h2.4A1.8 1.8 0 0 1 15 5.8V7m-7 0 1 14h6l1-14" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/></svg>
+          <span>Delete</span>
+        `;
         delBtn.onclick = async () => {
-          const auth = getAuth();
-          if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
-          if (!confirm("Yakin hapus post ini?")) return;
-
-          setStatus(panelStatus, "Deleting...", "warn");
+          const auth = loadSession();
+          if (!auth) return setStatus(panelStatus, "Session expired", "err");
+          if (!confirm("Delete this post?")) return;
+          setStatus(panelStatus, "Working...", "warn");
           const r = await apiPost("/api/delete-post", { ...auth, id: p.id });
-          setStatus(panelStatus, r.ok ? "Deleted" : ` ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
+          setStatus(panelStatus, r.ok ? "Done" : `Error: ${r.status}`, r.ok ? "ok" : "err");
           await loadHistory();
         };
 
@@ -424,106 +403,82 @@
       });
     }
 
-    // ===== Login =====
-    function fillRemembered(){
-      const saved = loadLocalAuth();
-      if (!saved) return;
-      usernameEl.value = saved.username || "";
-      passwordEl.value = saved.password || "";
-    }
-
+    // Login
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const username = usernameEl.value.trim();
       const password = passwordEl.value.trim();
-
-      if (!username || !password) {
-        setStatus(loginStatus, "Isi username & password.", "err");
-        return;
-      }
-
-      // Simpan auth di session (dipakai panggil API)
       const auth = { username, password };
-      saveSessionAuth(auth);
 
-      // optional remember
-      if (rememberMeEl.checked) saveLocalAuth(auth);
+      saveSession(auth);
+      if (rememberMeEl.checked) saveLocal(auth);
 
-      // Tes cepat: coba panggil /api/posts (public), lalu validasi lewat endpoint auth-required (clear-current dengan no-op)
-      // Di sini kita validasi beneran dengan request kecil ke server:
-      setStatus(loginStatus, "Checking...", "warn");
-      const test = await apiPost("/api/clear-current", auth); // kalau password salah => 401
-      if (!test.ok && test.status === 401) {
-        clearSessionAuth();
-        setStatus(loginStatus, "Username / password salah (server).", "err");
+      setStatus(loginStatus, "Working...", "warn");
+      const test = await apiPost("/api/auth-check", auth);
+      if (!test.ok) {
+        clearSession();
+        setStatus(loginStatus, "Invalid credentials", "err");
         return;
       }
 
-      // kalau ok, balikin featured yg mungkin kepencet cleared:
-      // NOTE: untuk mencegah clearing beneran saat login, kita segera reload history & user bisa set featured lagi.
-      // Kalau lo gak mau ada efek samping, bilang—gue bikin endpoint /api/auth-check.
-      setStatus(loginStatus, "Login sukses", "ok");
+      setStatus(loginStatus, "", "");
       showPanel();
-      setStatus(panelStatus, "Siap. (Kalau barusan clear featured kehapus, tinggal Set Featured dari history)", "warn");
+      setStatus(panelStatus, "", "");
       await loadHistory();
     });
 
     clearSavedBtn.addEventListener("click", () => {
-      clearLocalAuth();
-      clearSessionAuth();
+      clearLocal();
+      clearSession();
       usernameEl.value = "";
       passwordEl.value = "";
-      setStatus(loginStatus, "Saved login dihapus.", "warn");
+      setStatus(loginStatus, "", "");
     });
 
     logoutBtn.addEventListener("click", () => {
-      clearSessionAuth();
+      clearSession();
       showLogin();
-      setStatus(loginStatus, "Logged out.", "warn");
+      setStatus(loginStatus, "", "");
     });
 
     refreshBtn.addEventListener("click", loadHistory);
 
     clearFeaturedBtn.addEventListener("click", async () => {
-      const auth = getAuth();
-      if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
-      if (!confirm("Yakin clear featured? index jadi kosong.")) return;
-
-      setStatus(panelStatus, "Clearing featured...", "warn");
+      const auth = loadSession();
+      if (!auth) return setStatus(panelStatus, "Session expired", "err");
+      if (!confirm("Clear featured?")) return;
+      setStatus(panelStatus, "Working...", "warn");
       const r = await apiPost("/api/clear-current", auth);
-      setStatus(panelStatus, r.ok ? "Featured cleared" : ` ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
+      setStatus(panelStatus, r.ok ? "Done" : `Error: ${r.status}`, r.ok ? "ok" : "err");
       await loadHistory();
     });
 
     publishForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      const auth = getAuth();
-      if (!auth) return setStatus(panelStatus, "Session login hilang. Login lagi.", "err");
+      const auth = loadSession();
+      if (!auth) return setStatus(panelStatus, "Session expired", "err");
 
       const title = titleEl.value.trim();
       const poster = posterUrlEl.value.trim();
       const stream = streamUrlEl.value.trim();
-      if (!title || !poster || !stream) return setStatus(panelStatus, "Lengkapi judul/poster/stream.", "err");
 
-      setStatus(panelStatus, "Publishing...", "warn");
+      setStatus(panelStatus, "Working...", "warn");
       const r = await apiPost("/api/publish", { ...auth, title, poster, stream });
-
-      setStatus(panelStatus, r.ok ? "Published & Featured!" : ` ${r.status}: ${r.text}`, r.ok ? "ok" : "err");
+      setStatus(panelStatus, r.ok ? "Done" : `Error: ${r.status}`, r.ok ? "ok" : "err");
       if (r.ok) {
         publishForm.reset();
-        previewImg.src = "https://via.placeholder.com/900x1600?text=Poster+Preview";
-        previewTitle.textContent = "Judul Stream";
-        previewHint.textContent = "Isi form untuk update preview";
         await loadHistory();
       }
     });
 
     // Init
-    fillRemembered();
-    const session = loadSessionAuth();
-    if (session && session.username && session.password) {
-      // coba tampilkan panel langsung, history fetch tanpa auth
+    const saved = loadLocal();
+    if (saved?.username) usernameEl.value = saved.username;
+    if (saved?.password) passwordEl.value = saved.password;
+
+    const sess = loadSession();
+    if (sess?.username && sess?.password) {
       showPanel();
       loadHistory();
     }
