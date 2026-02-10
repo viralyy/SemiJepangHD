@@ -5,11 +5,46 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Player</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* tambahan kecil biar iframe rapi walau style.css minimal */
+    .frameWrap{display:none;margin-top:12px}
+    .frame{
+      width:100%;
+      height:75vh;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:14px;
+      background:#000;
+    }
+    .back{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin-top:10px;
+      color:inherit;
+      text-decoration:none;
+      opacity:.9;
+    }
+    .back svg{width:16px;height:16px}
+  </style>
 </head>
 <body>
   <main class="wrap">
     <h1 id="pageTitle">Player</h1>
+
+    <!-- video mode -->
     <video id="video" controls playsinline></video>
+
+    <!-- iframe mode -->
+    <div id="frameWrap" class="frameWrap">
+      <iframe id="frame" class="frame" allowfullscreen></iframe>
+    </div>
+
+    <a href="/" class="back">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M14 7 9 12l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Back</span>
+    </a>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
