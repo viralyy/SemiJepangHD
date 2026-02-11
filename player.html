@@ -31,7 +31,7 @@
     a{color:inherit;text-decoration:none}
     .wrap{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
 
-    /* ===== Header (same as index) ===== */
+    /* ===== Header (same style as index) ===== */
     header{
       position: sticky;
       top: 0;
@@ -142,7 +142,7 @@
       background: rgba(255,0,80,.10);
     }
 
-    /* ===== Player ===== */
+    /* ===== Player card ===== */
     .card{
       margin-top:12px;
       background: var(--panel);
@@ -152,10 +152,82 @@
       backdrop-filter: blur(10px);
       overflow:hidden;
     }
+
     .media{background:#000}
-    video{width:100%;height:auto;display:none;background:#000}
+
+    /* kunci 16:9 */
+    .videoBox{
+      width:100%;
+      aspect-ratio: 16 / 9;
+      background:#000;
+      position:relative;
+      overflow:hidden;
+    }
+
+    /* video isi box 16:9 */
+    video{
+      width:100%;
+      height:100%;
+      object-fit: contain;
+      display:none;
+      background:#000;
+    }
+
+    /* iframe juga 16:9 */
     .frameWrap{display:none}
-    .frame{width:100%;height:70vh;border:0;background:#000}
+    .frame{
+      width:100%;
+      height:100%;
+      border:0;
+      background:#000;
+    }
+
+    /* Custom controls bawah video */
+    .controls{
+      display:none;
+      padding: 10px 12px;
+      background: rgba(0,0,0,.55);
+      border-top: 1px solid rgba(255,255,255,.08);
+      backdrop-filter: blur(10px);
+    }
+    .controls.show{display:flex}
+    .ctrlRow{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+    }
+    .ctrlBtn{
+      width:44px;height:44px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      display:grid;place-items:center;
+      cursor:pointer;
+    }
+    .ctrlBtn svg{width:20px;height:20px;opacity:.92}
+    .time{
+      min-width: 120px;
+      font-size: 12px;
+      color: rgba(255,255,255,.78);
+      text-align:center;
+      user-select:none;
+    }
+    .seek{
+      flex:1;
+      appearance:none;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.18);
+      outline:none;
+    }
+    .seek::-webkit-slider-thumb{
+      appearance:none;
+      width:16px;height:16px;border-radius:50%;
+      background: rgba(255,0,80,.92);
+      border: 2px solid rgba(255,255,255,.75);
+    }
+
     .content{padding:12px;display:flex;flex-direction:column;gap:10px}
     .title{margin:0;font-weight:950;font-size:16px;letter-spacing:.2px}
 
@@ -353,18 +425,58 @@
   <main class="wrap">
     <section class="card">
       <div class="media">
-        <video id="video" controls playsinline></video>
-        <div id="frameWrap" class="frameWrap">
-          <iframe id="frame" class="frame" allowfullscreen></iframe>
+        <div class="videoBox">
+          <video id="video" playsinline></video>
+          <div id="frameWrap" class="frameWrap" style="width:100%;height:100%">
+            <iframe id="frame" class="frame" allowfullscreen></iframe>
+          </div>
+        </div>
+
+        <!-- Custom controls (bawah video) -->
+        <div class="controls" id="controls">
+          <div class="ctrlRow">
+            <button class="ctrlBtn" id="back10Btn" aria-label="Back 10s">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M9 7H5v4" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 11c1.6-3.4 5-5.5 8.8-5.5 5 0 9.2 3.9 9.2 9" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round"/>
+                <text x="12" y="18" font-size="8" fill="rgba(255,255,255,.92)" font-family="system-ui">10</text>
+              </svg>
+            </button>
+
+            <button class="ctrlBtn" id="playBtn" aria-label="Play/Pause">
+              <svg id="playIcon" viewBox="0 0 24 24" fill="none">
+                <path d="M9 8.5v7l7-3.5-7-3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linejoin="round"/>
+              </svg>
+              <svg id="pauseIcon" viewBox="0 0 24 24" fill="none" style="display:none">
+                <path d="M8.5 7.5v9M15.5 7.5v9" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+
+            <button class="ctrlBtn" id="fwd10Btn" aria-label="Forward 10s">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M15 7h4v4" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M19 11c-1.6-3.4-5-5.5-8.8-5.5-5 0-9.2 3.9-9.2 9" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round"/>
+                <text x="10" y="18" font-size="8" fill="rgba(255,255,255,.92)" font-family="system-ui">10</text>
+              </svg>
+            </button>
+
+            <div class="time" id="timeText">00:00 / 00:00</div>
+
+            <input class="seek" id="seek" type="range" min="0" max="1000" value="0" />
+
+            <button class="ctrlBtn" id="fsBtn" aria-label="Fullscreen">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4" stroke="rgba(255,255,255,.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 
       <div class="content">
         <h1 class="title" id="title">Loading...</h1>
-
         <div class="serverBar" id="serverBar"></div>
-
-        <div class="desc" id="description"> </div>
+        <div class="desc" id="description"></div>
       </div>
     </section>
 
@@ -411,4 +523,5 @@
   <script src="app.js"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
-      </html>
+</html>
+```0
