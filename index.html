@@ -184,14 +184,14 @@
     .sectionHead h2{margin:0;font-size:14px;letter-spacing:.2px}
     .sectionHead .meta{color:var(--muted);font-size:12px}
 
-    /* Grid 2 columns */
+    /* Grid 2 columns (smaller cards + more spacing) */
     .grid{
       display:grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      gap: 16px;               /* more spacing between left/right */
     }
     @media (max-width: 720px){
-      .grid{gap: 12px}
+      .grid{gap: 14px}
     }
 
     .card{
@@ -221,7 +221,7 @@
       position:absolute; inset:0;
       background: linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,.10) 55%, transparent);
       display:flex;flex-direction:column;justify-content:flex-end;
-      padding: 12px;
+      padding: 10px;
     }
     .playPill{
       position:absolute; top:10px; left:10px;
@@ -241,10 +241,10 @@
     }
 
     .info{
-      padding: 12px 12px 13px;
+      padding: 10px 12px 12px;
       display:flex;
       flex-direction:column;
-      gap: 8px;
+      gap: 10px;
     }
     .line1{
       display:flex;
@@ -266,15 +266,25 @@
       color: rgba(255,255,255,.78);
     }
     .tagMini svg{width:14px;height:14px;opacity:.92}
-    .desc{
-      font-size: 12px;
-      color: rgba(255,255,255,.72);
-      line-height: 1.35;
-      display:-webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow:hidden;
+
+    /* Remove desc on card, replace with play button */
+    .playBtn{
+      width:100%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);   /* black transparent */
+      cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+      font-weight: 800;
     }
+    .playBtn svg{width:16px;height:16px;opacity:.92}
+    .playBtn:active{transform: translateY(1px)}
 
     /* Pagination */
     .pager{
@@ -332,59 +342,77 @@
     }
     .footLink svg{width:14px;height:14px;opacity:.92}
 
-    /* Age Gate */
+    /* Age Gate (more professional, neutral buttons) */
     .gate{
       position: fixed; inset: 0;
       z-index: 50;
       display:none;
       align-items:center;
       justify-content:center;
-      background: rgba(0,0,0,.70);
+      background: rgba(0,0,0,.76);
       backdrop-filter: blur(10px);
       padding: 18px;
     }
     .gate.show{display:flex}
     .gateCard{
-      width: min(520px, 100%);
+      width: min(620px, 100%);
       background: rgba(12,13,18,.92);
       border:1px solid rgba(255,255,255,.12);
       border-radius: 18px;
       box-shadow: var(--shadow);
-      padding: 14px;
+      padding: 16px;
     }
     .gateHead{
-      display:flex;align-items:center;gap:10px;
+      display:flex;align-items:center;gap:12px;
       margin-bottom: 10px;
     }
     .gateIcon{
       width:44px;height:44px;border-radius:16px;
-      background: linear-gradient(145deg, var(--accent1), var(--accent2));
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
       display:grid;place-items:center;
     }
     .gateIcon svg{width:22px;height:22px;opacity:.95}
     .gateCard h3{margin:0;font-size:14px;letter-spacing:.2px}
-    .gateCard p{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.4}
+    .gateCard p{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.45}
+
+    .gateRules{
+      margin-top: 10px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+      border-radius: 14px;
+      padding: 12px;
+    }
+    .gateRules b{
+      display:block;
+      font-size:12px;
+      letter-spacing:.2px;
+      margin-bottom: 8px;
+      color: rgba(255,255,255,.86);
+    }
+    .gateRules ul{
+      margin:0;
+      padding-left: 18px;
+      color: rgba(255,255,255,.70);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .gateRules li{margin: 4px 0}
+
     .gateActions{display:flex;gap:10px;margin-top:12px}
     .gateBtn{
       flex:1;
       display:flex;align-items:center;justify-content:center;gap:8px;
       padding: 11px 12px;
       border-radius: 14px;
-      border:1px solid rgba(255,255,255,.10);
-      background: rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22); /* black transparent (both buttons) */
       cursor:pointer;
       font-weight: 800;
-    }
-    .gateBtn.primary{
-      border-color: transparent;
-      background: linear-gradient(145deg, var(--accent1), var(--accent2));
-    }
-    .gateBtn.danger{
-      border-color: transparent;
-      background: var(--danger);
+      color: rgba(255,255,255,.92);
     }
     .gateBtn svg{width:16px;height:16px;opacity:.92}
-
+    .gateBtn:active{transform: translateY(1px)}
   </style>
 </head>
 <body>
@@ -401,23 +429,33 @@
           </svg>
         </div>
         <div>
-          <h3>Age Confirmation</h3>
-          <p>Confirm you are 18+ to continue.</p>
+          <h3>Konfirmasi Usia</h3>
+          <p>Halaman ini ditujukan untuk pengguna dewasa. Silakan baca dan setujui ketentuan di bawah sebelum melanjutkan.</p>
         </div>
       </div>
 
+      <div class="gateRules">
+        <b>Persyaratan & Pedoman</b>
+        <ul>
+          <li>Dengan menekan <b>Saya 18+</b>, Anda menyatakan berusia minimal 18 tahun atau usia dewasa sesuai hukum di wilayah Anda.</li>
+          <li>Anda setuju untuk mengakses konten secara bertanggung jawab dan sesuai peraturan yang berlaku.</li>
+          <li>Jika Anda di bawah umur atau tidak setuju dengan ketentuan ini, pilih <b>Keluar</b>.</li>
+          <li>Konfirmasi ini disimpan di perangkat Anda selama 1 hari untuk pengalaman yang lebih nyaman.</li>
+        </ul>
+      </div>
+
       <div class="gateActions">
-        <button class="gateBtn primary" id="ageYes">
+        <button class="gateBtn" id="ageYes">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M10.5 16.5 7 13l1.5-1.5 2 2L15.5 8.5 17 10l-6.5 6.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span>I am 18+</span>
+          <span>Saya 18+</span>
         </button>
-        <button class="gateBtn danger" id="ageNo">
+        <button class="gateBtn" id="ageNo">
           <svg viewBox="0 0 24 24" fill="none">
             <path d="M7 7 17 17M17 7 7 17" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linecap="round"/>
           </svg>
-          <span>Leave</span>
+          <span>Keluar</span>
         </button>
       </div>
     </div>
@@ -625,7 +663,6 @@
       items.forEach(p => {
         const minutes = (p.durationMinutes ?? p.minutes ?? p.duration ?? null);
         const genre = (p.genre || "-");
-        const desc = (p.description || "-");
 
         const card = document.createElement("a");
         card.className = "card";
@@ -667,7 +704,12 @@
               </span>
             </div>
 
-            <div class="desc">${esc(desc)}</div>
+            <div class="playBtn" role="button" aria-label="Play">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M10 8.5v7l7-3.5-7-3.5Z" stroke="rgba(255,255,255,.92)" stroke-width="1.9" stroke-linejoin="round"/>
+              </svg>
+              <span>Play</span>
+            </div>
           </div>
         `;
 
@@ -705,7 +747,6 @@
     function openMenu(){
       menuPanel.classList.add("open");
       menuBackdrop.classList.add("open");
-      // “halus” (transform + will-change), browser bakal ngejar fps tinggi kalau device kuat
       menuPanel.setAttribute("aria-hidden","false");
     }
     function closeMenu(){
@@ -752,11 +793,6 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    // Player page expects /api/stream (featured). We want click card to play THIS post:
-    // Minimal approach: store clicked post in localStorage, then player reads it (optional).
-    // For now we just open player.html and player will play featured unless you want per-id play.
-    // If you want per-id play, tell me—gue add support 1 file patch kecil.
-
     async function boot(){
       const data = await apiGet("/api/posts");
       if (!data) {
@@ -767,7 +803,6 @@
       currentId = data.currentId || null;
       allPosts = Array.isArray(data.posts) ? data.posts : [];
 
-      // If you want featured always on top:
       if (currentId) {
         allPosts.sort((a,b)=>{
           if (a.id === currentId) return -1;
@@ -808,14 +843,12 @@
     }
 
     function blockGate(){
-      // redirect to blank / safe page
       window.location.href = "about:blank";
     }
 
     ageYes.onclick = passGate;
     ageNo.onclick = blockGate;
 
-    // start
     if (shouldShowGate()) {
       ageGate.classList.add("show");
     } else {
@@ -824,4 +857,4 @@
   </script>
 
 </body>
-              </html>
+</html>
