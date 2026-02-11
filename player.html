@@ -31,7 +31,6 @@
     a{color:inherit;text-decoration:none}
     .wrap{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
 
-    /* ===== Header (same style as index) ===== */
     header{
       position: sticky;
       top: 0;
@@ -84,7 +83,6 @@
       white-space:nowrap;
     }
 
-    /* ===== Menu dropdown ===== */
     .menuPanel{
       position: fixed;
       left: 0; right: 0;
@@ -142,7 +140,6 @@
       background: rgba(255,0,80,.10);
     }
 
-    /* ===== Player card ===== */
     .card{
       margin-top:12px;
       background: var(--panel);
@@ -154,8 +151,6 @@
     }
 
     .media{background:#000}
-
-    /* kunci 16:9 */
     .videoBox{
       width:100%;
       aspect-ratio: 16 / 9;
@@ -163,8 +158,6 @@
       position:relative;
       overflow:hidden;
     }
-
-    /* video isi box 16:9 */
     video{
       width:100%;
       height:100%;
@@ -172,8 +165,6 @@
       display:none;
       background:#000;
     }
-
-    /* iframe juga 16:9 */
     .frameWrap{display:none}
     .frame{
       width:100%;
@@ -181,8 +172,6 @@
       border:0;
       background:#000;
     }
-
-    /* Custom controls bawah video */
     .controls{
       display:none;
       padding: 10px 12px;
@@ -255,7 +244,6 @@
       white-space:pre-wrap;
     }
 
-    /* ===== Related ===== */
     .sectionHead{
       display:flex;align-items:flex-end;justify-content:space-between;
       gap:12px;
@@ -330,7 +318,6 @@
       display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
     }
 
-    /* ===== Footer (same style) ===== */
     footer{
       margin-top: 22px;
       border-top: 1px solid rgba(255,255,255,.08);
@@ -431,7 +418,6 @@
           </div>
         </div>
 
-        <!-- Custom controls (bawah video) -->
         <div class="controls" id="controls">
           <div class="ctrlRow">
             <button class="ctrlBtn" id="back10Btn" aria-label="Back 10s">
@@ -521,5 +507,42 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="app.js"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+
+  <!-- ========== IKLAN ========== -->
+
+  <!-- 1. Popunder halaman (al5sm zone 10109877) -->
+  <script>
+  (function(s){
+    s.dataset.zone = '10109877';
+    s.src = 'https://al5sm.com/tag.min.js';
+  })([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+  </script>
+
+  <!-- 2. Direct link pada tombol server (dengan cooldown 60 detik) -->
+  <script>
+  const SERVER_AD_URL = "https://pk.octodekipper.com/ij6oj7PyYV6ECUMS/131416";
+  const SERVER_AD_COOLDOWN = 60 * 1000; // 1 menit
+
+  function now() {
+    return Date.now();
+  }
+
+  function tryServerAd() {
+    const last = Number(localStorage.getItem("SJHD_SERVER_AD_LAST") || 0);
+    if (now() - last > SERVER_AD_COOLDOWN) {
+      window.open(SERVER_AD_URL, "_blank");
+      localStorage.setItem("SJHD_SERVER_AD_LAST", now());
+    }
+  }
+
+  document.addEventListener("click", function(e) {
+    const btn = e.target.closest(".serverBtn");
+    if (!btn) return;
+    tryServerAd();
+  }, true);
+  </script>
+
+  <!-- ========== AKHIR IKLAN ========== -->
+
 </body>
-</html>
+    </html>
