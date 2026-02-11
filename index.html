@@ -184,14 +184,17 @@
     .sectionHead h2{margin:0;font-size:14px;letter-spacing:.2px}
     .sectionHead .meta{color:var(--muted);font-size:12px}
 
-    /* Grid 2 columns (smaller cards + more spacing) */
+    /* ===== GRID: 3 kolom ===== */
     .grid{
       display:grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;               /* more spacing between left/right */
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
     }
-    @media (max-width: 720px){
-      .grid{gap: 14px}
+    @media (max-width: 980px){
+      .grid{grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;}
+    }
+    @media (max-width: 560px){
+      .grid{grid-template-columns: 1fr; gap: 12px;}
     }
 
     .card{
@@ -205,6 +208,23 @@
       flex-direction:column;
       min-height: 100%;
     }
+
+    /* ===== Animasi masuk (ringan) ===== */
+    .reveal{
+      opacity: 0;
+      transform: translate3d(0,10px,0);
+      transition: opacity 220ms ease, transform 260ms cubic-bezier(.22,.85,.22,1);
+      will-change: opacity, transform;
+    }
+    .reveal.show{
+      opacity: 1;
+      transform: translate3d(0,0,0);
+    }
+    @media (prefers-reduced-motion: reduce){
+      .reveal{transition:none; transform:none; opacity:1}
+      .reveal.show{transform:none}
+    }
+
     .thumb{
       width:100%;
       aspect-ratio: 9 / 16;
@@ -267,7 +287,6 @@
     }
     .tagMini svg{width:14px;height:14px;opacity:.92}
 
-    /* Remove desc on card, replace with play button */
     .playBtn{
       width:100%;
       display:inline-flex;
@@ -277,7 +296,7 @@
       padding: 10px 12px;
       border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22);   /* black transparent */
+      background: rgba(0,0,0,.22);
       cursor:pointer;
       user-select:none;
       font-size: 13px;
@@ -406,7 +425,7 @@
       padding: 11px 12px;
       border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.22); /* black transparent (both buttons) */
+      background: rgba(0,0,0,.22);
       cursor:pointer;
       font-weight: 800;
       color: rgba(255,255,255,.92);
@@ -484,7 +503,6 @@
       <div class="topbar">
         <div class="brand">
           <div class="logo" aria-hidden="true">
-            <!-- Torii-like Japanese logo -->
             <svg viewBox="0 0 24 24" fill="none">
               <path d="M5 7h14" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
               <path d="M7 9h10" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
@@ -577,7 +595,7 @@
   </main>
 
   <script>
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 15; // ✅ dari 10 jadi 15 (logic paging tetap sama)
 
     let allPosts = [];
     let filtered = [];
@@ -641,8 +659,23 @@
       renderGenres();
     }
 
+    /* ===== reveal animation (ringan) ===== */
+    let io = null;
+    function setupReveal(){
+      if (io) io.disconnect();
+      io = new IntersectionObserver((entries)=>{
+        entries.forEach(ent=>{
+          if (ent.isIntersecting){
+            ent.target.classList.add("show");
+            io.unobserve(ent.target);
+          }
+        });
+      }, { root: null, threshold: 0.12 });
+
+      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    }
+
     function render(){
-      // header meta
       const total = filtered.length;
       const maxPage = Math.max(0, Math.ceil(total / PAGE_SIZE) - 1);
       page = Math.min(page, maxPage);
@@ -654,18 +687,16 @@
       sectionTitle.textContent = activeGenre === "All" ? "Browse" : ("Genre: " + activeGenre);
       metaInfo.textContent = total ? (`Showing ${start+1}-${end} of ${total}`) : "No posts";
 
-      // pager
       prevBtn.setAttribute("aria-disabled", String(page === 0));
       nextBtn.setAttribute("aria-disabled", String(page >= maxPage));
 
-      // cards
       grid.innerHTML = "";
       items.forEach(p => {
         const minutes = (p.durationMinutes ?? p.minutes ?? p.duration ?? null);
         const genre = (p.genre || "-");
 
         const card = document.createElement("a");
-        card.className = "card";
+        card.className = "card reveal";  // ✅ tambah reveal class
         card.href = `/player.html?id=${encodeURIComponent(p.id || "")}`;
 
         const featuredBadge = (p.id && currentId && p.id === currentId)
@@ -715,6 +746,9 @@
 
         grid.appendChild(card);
       });
+
+      // ✅ setelah render, pasang observer animasi
+      setupReveal();
     }
 
     function collectGenres(posts){
@@ -743,7 +777,6 @@
       });
     }
 
-    // Menu open/close
     function openMenu(){
       menuPanel.classList.add("open");
       menuBackdrop.classList.add("open");
@@ -759,7 +792,6 @@
     menuClose.onclick = closeMenu;
     menuBackdrop.onclick = closeMenu;
 
-    // Search toggle
     searchBtn.onclick = () => {
       searchRow.classList.toggle("show");
       if (searchRow.classList.contains("show")) {
@@ -779,7 +811,6 @@
       applyFilter();
     };
 
-    // Pager
     prevBtn.onclick = () => {
       if (prevBtn.getAttribute("aria-disabled") === "true") return;
       page = Math.max(0, page - 1);
@@ -816,9 +847,7 @@
       applyFilter();
     }
 
-    /* =========================
-       Age Gate (once per day)
-    ========================= */
+    /* Age Gate (once per day) */
     const ageGate = document.getElementById("ageGate");
     const ageYes = document.getElementById("ageYes");
     const ageNo = document.getElementById("ageNo");
