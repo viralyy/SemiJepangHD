@@ -44,7 +44,6 @@
       padding: 14px 14px 38px;
     }
 
-    /* Header */
     header {
       position: sticky;
       top: 0;
@@ -145,7 +144,6 @@
       white-space: nowrap;
     }
 
-    /* Menu dropdown */
     .menuPanel {
       position: fixed;
       left: 0; right: 0;
@@ -233,7 +231,6 @@
 
     .menuBackdrop.open { opacity: 1; pointer-events: auto; }
 
-    /* Main */
     .sectionHead {
       display: flex;
       align-items: flex-end;
@@ -379,7 +376,6 @@
 
     .playBtn svg { width: 16px; height: 16px; opacity: .92; }
 
-    /* Pagination */
     .pager {
       display: flex;
       justify-content: center;
@@ -411,7 +407,6 @@
       pointer-events: none;
     }
 
-    /* Footer */
     footer {
       margin-top: 22px;
       border-top: 1px solid rgba(255,255,255,.08);
@@ -467,7 +462,6 @@
       .footRight { width: 100%; }
     }
 
-    /* Age Gate */
     .gate {
       position: fixed;
       inset: 0;
@@ -762,27 +756,27 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    function esc(s){
+    function esc(s) {
       return String(s)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
     }
 
-    async function apiGet(path){
+    async function apiGet(path) {
       const res = await fetch(path, { cache: "no-store" });
       if (!res.ok) return null;
       return res.json();
     }
 
-    function getText(post){
+    function getText(post) {
       const t = (post.title || "") + " " + (post.genre || "") + " " + (post.description || "");
       return t.toLowerCase();
     }
 
-    function applyFilter(){
+    function applyFilter() {
       const q = query.trim().toLowerCase();
 
       filtered = allPosts.filter(p => {
@@ -796,7 +790,7 @@
       renderGenres();
     }
 
-    function render(){
+    function render() {
       const total = filtered.length;
       const maxPage = Math.max(0, Math.ceil(total / PAGE_SIZE) - 1);
       page = Math.min(page, maxPage);
@@ -869,16 +863,16 @@
       });
     }
 
-    function collectGenres(posts){
+    function collectGenres(posts) {
       const set = new Set();
       posts.forEach(p => {
         const g = (p.genre || "").trim();
         if (g) set.add(g);
       });
-      return ["All", ...Array.from(set).sort((a,b)=>a.localeCompare(b))];
+      return ["All", ...Array.from(set).sort((a,b) => a.localeCompare(b))];
     }
 
-    function renderGenres(){
+    function renderGenres() {
       const genres = collectGenres(allPosts);
 
       genreList.innerHTML = "";
@@ -895,16 +889,16 @@
       });
     }
 
-    function openMenu(){
+    function openMenu() {
       menuPanel.classList.add("open");
       menuBackdrop.classList.add("open");
-      menuPanel.setAttribute("aria-hidden","false");
+      menuPanel.setAttribute("aria-hidden", "false");
     }
 
-    function closeMenu(){
+    function closeMenu() {
       menuPanel.classList.remove("open");
       menuBackdrop.classList.remove("open");
-      menuPanel.setAttribute("aria-hidden","true");
+      menuPanel.setAttribute("aria-hidden", "true");
     }
 
     menuBtn.onclick = openMenu;
@@ -914,7 +908,7 @@
     searchBtn.onclick = () => {
       searchRow.classList.toggle("show");
       if (searchRow.classList.contains("show")) {
-        setTimeout(()=>searchInput.focus(), 0);
+        setTimeout(() => searchInput.focus(), 0);
       }
     };
 
@@ -944,7 +938,7 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    async function boot(){
+    async function boot() {
       const data = await apiGet("/api/posts");
       if (!data) {
         metaInfo.textContent = "Failed to load";
@@ -955,7 +949,7 @@
       allPosts = Array.isArray(data.posts) ? data.posts : [];
 
       if (currentId) {
-        allPosts.sort((a,b)=>{
+        allPosts.sort((a,b) => {
           if (a.id === currentId) return -1;
           if (b.id === currentId) return 1;
           return (b.createdAt || "").localeCompare(a.createdAt || "");
@@ -972,26 +966,26 @@
     const ageYes = document.getElementById("ageYes");
     const ageNo = document.getElementById("ageNo");
 
-    function todayKey(){
+    function todayKey() {
       const d = new Date();
       const y = d.getFullYear();
-      const m = String(d.getMonth()+1).padStart(2,"0");
-      const day = String(d.getDate()).padStart(2,"0");
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
       return `\( {y}- \){m}-${day}`;
     }
 
-    function shouldShowGate(){
+    function shouldShowGate() {
       const last = localStorage.getItem("SJHD_AGE_OK_DATE");
       return last !== todayKey();
     }
 
-    function passGate(){
+    function passGate() {
       localStorage.setItem("SJHD_AGE_OK_DATE", todayKey());
       ageGate.classList.remove("show");
       boot();
     }
 
-    function blockGate(){
+    function blockGate() {
       window.location.href = "about:blank";
     }
 
@@ -1005,4 +999,4 @@
     }
   </script>
 </body>
-</html>
+  </html>
