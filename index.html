@@ -30,7 +30,7 @@
         var(--bg);
     }
     a{color:inherit; text-decoration:none}
-    .wrap{max-width:1200px;margin:0 auto;padding:14px 16px 40px}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 38px}
 
     /* Header */
     header{
@@ -64,6 +64,7 @@
     }
     .iconBtn svg{width:18px;height:18px;opacity:.92}
     .iconBtn:active{transform: translateY(1px)}
+
     .searchRow{display:none;margin-top:10px;gap:10px;align-items:center}
     .searchRow.show{display:flex}
     .searchInput{
@@ -86,7 +87,7 @@
       white-space:nowrap;
     }
 
-    /* Menu dropdown */
+    /* Menu dropdown (from top) */
     .menuPanel{
       position: fixed;
       left: 0; right: 0;
@@ -99,7 +100,7 @@
       transition: transform 240ms cubic-bezier(.22,.85,.22,1), opacity 200ms ease;
     }
     .menuPanel.open{transform: translate3d(0,0,0);opacity:1;pointer-events:auto}
-    .menuInner{max-width:1200px;margin:0 auto;padding:14px 16px 16px}
+    .menuInner{max-width:1200px;margin:0 auto;padding:14px 14px 16px}
     .menuCard{
       background: rgba(12,13,18,.92);
       border:1px solid var(--stroke);
@@ -122,7 +123,7 @@
       cursor:pointer;
     }
     .menuClose svg{width:18px;height:18px;opacity:.92}
-    .genres{padding:12px;display:flex;flex-wrap:wrap;gap:10px}
+    .genres{padding:12px;display:flex;flex-wrap: wrap;gap:10px}
     .genreBtn{
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
@@ -155,46 +156,28 @@
     .sectionHead h2{margin:0;font-size:14px;letter-spacing:.2px}
     .sectionHead .meta{color:var(--muted);font-size:12px}
 
-    /* ===== GRID: 3 COLUMNS + SPACING ===== */
+    /* ===== GRID: 3 columns on HP ===== */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px; /* biar gak dempet */
+      gap: 12px; /* spacing biar ga dempet */
     }
-    /* responsif */
-    @media (max-width: 980px){
-      .grid{grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px;}
-    }
-    @media (max-width: 720px){
-      .grid{grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px;}
-    }
-    @media (max-width: 420px){
-      .grid{grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;}
+    /* Optional: kalau layar gede banget masih 3 biar konsisten */
+    @media (min-width: 980px){
+      .grid{gap: 14px}
     }
 
     .card{
       background: var(--panel);
       border:1px solid var(--stroke);
-      border-radius: 18px;
+      border-radius: 16px;
       overflow:hidden;
       box-shadow: 0 14px 50px rgba(0,0,0,.32);
       backdrop-filter: blur(10px);
       display:flex;
       flex-direction:column;
       min-height: 100%;
-
-      /* ===== scroll reveal (ringan) ===== */
-      opacity: 0;
-      transform: translate3d(0, 12px, 0);
-      will-change: transform, opacity;
-      transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
-    }
-    .card.reveal{
-      opacity: 1;
-      transform: translate3d(0,0,0);
-    }
-    @media (prefers-reduced-motion: reduce){
-      .card{transition:none; transform:none; opacity:1}
+      transform: translate3d(0,0,0); /* bantu GPU */
     }
 
     .thumb{
@@ -216,48 +199,48 @@
       padding: 10px;
     }
     .playPill{
-      position:absolute; top:10px; left:10px;
-      display:inline-flex; align-items:center; gap:8px;
-      padding: 8px 10px;
+      position:absolute; top:8px; left:8px;
+      display:inline-flex; align-items:center; gap:6px;
+      padding: 7px 9px;
       border-radius: 999px;
       border:1px solid rgba(255,255,255,.16);
       background: rgba(0,0,0,.30);
-      font-size: 12px;
+      font-size: 11px;
     }
-    .playPill svg{width:14px;height:14px}
+    .playPill svg{width:13px;height:13px}
     .tTitle{
       font-weight:900;
-      font-size: 13px;
+      font-size: 12px;
       line-height: 1.2;
       text-shadow: 0 12px 30px rgba(0,0,0,.55);
     }
 
     .info{
-      padding: 10px 12px 12px;
+      padding: 10px 10px 10px;
       display:flex;
       flex-direction:column;
       gap: 10px;
     }
     .line1{
       display:flex;
-      gap:10px;
+      gap:8px;
       flex-wrap: wrap;
       align-items:center;
       color: rgba(255,255,255,.82);
-      font-size: 12px;
+      font-size: 11px;
     }
     .tagMini{
       display:inline-flex;
-      gap:8px;
+      gap:6px;
       align-items:center;
-      padding: 7px 10px;
+      padding: 6px 8px;
       border-radius: 999px;
       border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
-      font-size: 12px;
+      font-size: 11px;
       color: rgba(255,255,255,.78);
     }
-    .tagMini svg{width:14px;height:14px;opacity:.92}
+    .tagMini svg{width:13px;height:13px;opacity:.92}
 
     .playBtn{
       width:100%;
@@ -265,17 +248,32 @@
       align-items:center;
       justify-content:center;
       gap:8px;
-      padding: 10px 12px;
+      padding: 10px 10px;
       border-radius: 14px;
       border:1px solid rgba(255,255,255,.12);
       background: rgba(0,0,0,.22);
       cursor:pointer;
       user-select:none;
-      font-size: 13px;
-      font-weight: 800;
+      font-size: 12px;
+      font-weight: 850;
     }
     .playBtn svg{width:16px;height:16px;opacity:.92}
     .playBtn:active{transform: translateY(1px)}
+
+    /* ===== Scroll reveal animation (light) ===== */
+    .reveal{
+      opacity: 0;
+      transform: translate3d(0,10px,0);
+      will-change: transform, opacity;
+    }
+    .reveal.in{
+      opacity: 1;
+      transform: translate3d(0,0,0);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+    @media (prefers-reduced-motion: reduce){
+      .reveal, .reveal.in{opacity:1;transform:none;transition:none}
+    }
 
     /* Pagination */
     .pager{
@@ -295,7 +293,7 @@
     .btn svg{width:16px;height:16px;opacity:.92}
     .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 
-    /* Footer */
+    /* Footer (fix biar ga aneh di HP) */
     footer{
       margin-top: 22px;
       border-top: 1px solid rgba(255,255,255,.08);
@@ -325,8 +323,12 @@
       background: rgba(255,255,255,.03);
     }
     .footLink svg{width:14px;height:14px;opacity:.92}
+    @media (max-width: 520px){
+      footer{flex-direction:column;align-items:flex-start}
+      .footRight{width:100%}
+    }
 
-    /* Age Gate */
+    /* Age Gate (unchanged styling from your latest) */
     .gate{
       position: fixed; inset: 0;
       z-index: 50;
@@ -356,7 +358,6 @@
     .gateIcon svg{width:22px;height:22px;opacity:.95}
     .gateCard h3{margin:0;font-size:14px;letter-spacing:.2px}
     .gateCard p{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.45}
-
     .gateRules{
       margin-top: 10px;
       border:1px solid rgba(255,255,255,.10);
@@ -364,22 +365,9 @@
       border-radius: 14px;
       padding: 12px;
     }
-    .gateRules b{
-      display:block;
-      font-size:12px;
-      letter-spacing:.2px;
-      margin-bottom: 8px;
-      color: rgba(255,255,255,.86);
-    }
-    .gateRules ul{
-      margin:0;
-      padding-left: 18px;
-      color: rgba(255,255,255,.70);
-      font-size: 12px;
-      line-height: 1.55;
-    }
+    .gateRules b{display:block;font-size:12px;letter-spacing:.2px;margin-bottom: 8px;color: rgba(255,255,255,.86)}
+    .gateRules ul{margin:0;padding-left: 18px;color: rgba(255,255,255,.70);font-size: 12px;line-height: 1.55}
     .gateRules li{margin: 4px 0}
-
     .gateActions{display:flex;gap:10px;margin-top:12px}
     .gateBtn{
       flex:1;
@@ -557,7 +545,7 @@
   </main>
 
   <script>
-    const PAGE_SIZE = 10;
+    const PAGE_SIZE = 15; // <= max kebawah 15 postingan
 
     let allPosts = [];
     let filtered = [];
@@ -621,32 +609,22 @@
       renderGenres();
     }
 
-    /* ===== Scroll reveal (ringan) ===== */
-    let revealObserver = null;
-    function initRevealObserver(){
-      if (revealObserver) return;
-      if (!("IntersectionObserver" in window)) return;
+    /* ===== reveal observer (light) ===== */
+    let io = null;
+    function setupReveal(){
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-      revealObserver = new IntersectionObserver((entries) => {
-        for (const e of entries) {
+      if (io) io.disconnect();
+      io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
           if (e.isIntersecting) {
-            e.target.classList.add("reveal");
-            revealObserver.unobserve(e.target);
+            e.target.classList.add("in");
+            io.unobserve(e.target);
           }
-        }
-      }, {
-        threshold: 0.12,
-        rootMargin: "0px 0px -10% 0px"
-      });
-    }
-    function observeCards(){
-      initRevealObserver();
-      if (!revealObserver) {
-        // fallback: langsung tampil
-        document.querySelectorAll(".card").forEach(c => c.classList.add("reveal"));
-        return;
-      }
-      document.querySelectorAll(".card").forEach(c => revealObserver.observe(c));
+        });
+      }, { root: null, threshold: 0.08, rootMargin: "80px 0px" });
+
+      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
     }
 
     function render(){
@@ -670,11 +648,11 @@
         const genre = (p.genre || "-");
 
         const card = document.createElement("a");
-        card.className = "card";
+        card.className = "card reveal";
         card.href = `/player.html?id=${encodeURIComponent(p.id || "")}`;
 
         const featuredBadge = (p.id && currentId && p.id === currentId)
-          ? `<span style="margin-left:8px; font-size:12px; color:rgba(255,255,255,.78)">Featured</span>`
+          ? `<span style="margin-left:8px; font-size:11px; color:rgba(255,255,255,.78)">Featured</span>`
           : "";
 
         card.innerHTML = `
@@ -721,8 +699,8 @@
         grid.appendChild(card);
       });
 
-      // animasi reveal (tidak mengubah logic data)
-      observeCards();
+      // start reveal after DOM update
+      setupReveal();
     }
 
     function collectGenres(posts){
@@ -768,7 +746,9 @@
 
     searchBtn.onclick = () => {
       searchRow.classList.toggle("show");
-      if (searchRow.classList.contains("show")) setTimeout(()=>searchInput.focus(), 0);
+      if (searchRow.classList.contains("show")) {
+        setTimeout(()=>searchInput.focus(), 0);
+      }
     };
 
     searchInput.addEventListener("input", (e) => {
@@ -819,7 +799,9 @@
       applyFilter();
     }
 
-    /* Age Gate (once per day) */
+    /* =========================
+       Age Gate (once per day)
+    ========================= */
     const ageGate = document.getElementById("ageGate");
     const ageYes = document.getElementById("ageYes");
     const ageNo = document.getElementById("ageNo");
@@ -850,8 +832,11 @@
     ageYes.onclick = passGate;
     ageNo.onclick = blockGate;
 
-    if (shouldShowGate()) ageGate.classList.add("show");
-    else boot();
+    if (shouldShowGate()) {
+      ageGate.classList.add("show");
+    } else {
+      boot();
+    }
   </script>
 </body>
 </html>
