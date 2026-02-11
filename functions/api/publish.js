@@ -30,38 +30,54 @@ export async function onRequestPost(context) {
   if (username !== context.env.ADMIN_USERNAME) return unauthorized();
   if (password !== context.env.ADMIN_PASSWORD) return unauthorized();
 
-  const streamsArr = Array.isArray(streams) ? streams : [];
-  const firstUrl = stream || (streamsArr[0]?.url || "");
+  const titleS = String(title || "").trim();
+  const posterS = String(poster || "").trim();
+  const genreS = String(genre || "").trim();
+  const descS = String(description ?? "").trim();
 
-  if (!title || !poster || !firstUrl || !genre || !minutes || !description) {
-    return new Response("Missing fields", { status: 400 });
+  // streams normalize
+  let streamsArr = Array.isArray(streams) ? streams : [];
+  const streamS = String(stream || "").trim();
+
+  if (!streamsArr.length && streamS) {
+    streamsArr = [{ label: "Server 1", url: streamS }];
   }
 
+  const cleanStreams = streamsArr
+    .map((s, idx) => ({
+      label: String(s?.label || `Server ${idx + 1}`).trim().slice(0, 40),
+      url: String(s?.url || "").trim()
+    }))
+    .filter(s => s.url);
+
+  const firstUrl = cleanStreams[0]?.url || streamS;
+
+  // minutes validate (jangan pakai !minutes)
   const mins = Number(minutes);
   if (!Number.isFinite(mins) || mins <= 0) {
     return new Response("Invalid minutes", { status: 400 });
   }
 
-  const id = makeId();
+  // required fields
+  if (!titleS || !posterS || !firstUrl || !genreS || !descS) {
+    return new Response("Missing fields", { status: 400 });
+  }
 
-  const cleanStreams = streamsArr
-    .map((s, idx) => ({
-      label: String(s?.label || `Server ${idx + 1}`).slice(0, 40),
-      url: String(s?.url || "")
-    }))
-    .filter(s => s.url);
+  const id = makeId();
 
   const post = {
     id,
-    title: String(title).slice(0, 140),
-    poster: String(poster),
-    // backward compatible: still store a primary stream
-    stream: String(firstUrl),
-    // new: multi server list
-    streams: cleanStreams,
-    genre: String(genre).slice(0, 40),
+    title: titleS.slice(0, 140),
+    poster: posterS,
+    stream: String(firstUrl),     // backward compatible
+    streams: cleanStreams,        // multi server
+    genre: genreS.slice(0, 40),
     minutes: mins,
-    description: String(description).slice(0, 500),
+
+    // ✅ jangan dipotong 500, biar full masuk
+    // kalau lo takut kebesaran, ganti jadi slice(0, 5000) misalnya
+    description: descS,
+
     createdAt: new Date().toISOString(),
   };
 
@@ -69,6 +85,6 @@ export async function onRequestPost(context) {
   await context.env.STREAM_KV.put("stream:current", id);
 
   return new Response(JSON.stringify({ ok: true, post }), {
-    headers: { "content-type": "application/json; charset=utf-8" },
+    headers: { "content-type": "application/json; charset=utf-8", "cache-control": "no-store" },
   });
 }
