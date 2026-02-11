@@ -6,145 +6,89 @@
   <title>SemiJepangHD</title>
   <meta name="color-scheme" content="dark" />
   <style>
-    :root {
-      --bg: #0b0c10;
-      --panel: rgba(18,19,26,.92);
-      --panel2: rgba(15,16,22,.95);
-      --text: #e8e8ee;
-      --muted: #a8a8b3;
+    :root{
+      --bg:#0b0c10;
+      --panel: rgba(18,19,26,.72);
+      --panel2: rgba(15,16,22,.82);
+      --text:#e8e8ee;
+      --muted:#a8a8b3;
       --stroke: rgba(255,255,255,.10);
-      --shadow: 0 8px 32px rgba(0,0,0,.30);
+      --shadow: 0 18px 70px rgba(0,0,0,.40);
       --accent1: rgba(255,0,80,.92);
       --accent2: rgba(120,90,255,.85);
       --danger: rgba(255,64,64,.95);
     }
-
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       color: var(--text);
-      background: var(--bg);
-      background-image:
-        radial-gradient(ellipse at 20% 10%, rgba(255,0,80,0.10), transparent 60%),
-        radial-gradient(ellipse at 80% 85%, rgba(120,90,255,0.08), transparent 60%);
-      background-attachment: fixed;
-      background-size: 100% 100%;
-      min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      background:
+        radial-gradient(1200px 700px at 20% -10%, rgba(255,0,80,.18), transparent 55%),
+        radial-gradient(1000px 600px at 95% 10%, rgba(120,90,255,.16), transparent 55%),
+        var(--bg);
     }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1200px;margin:0 auto;padding:14px 14px 38px}
 
-    a { color: inherit; text-decoration: none; }
-
-    .wrap {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 14px 38px;
-    }
-
-    header {
+    /* Header */
+    header{
       position: sticky;
       top: 0;
       z-index: 20;
-      background: rgba(11,12,16, 0.94);
+      background: linear-gradient(to bottom, rgba(11,12,16,.86), rgba(11,12,16,.58), transparent);
+      backdrop-filter: blur(10px);
       padding: 10px 0 12px;
     }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 210px;
-    }
-
-    .logo {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:210px}
+    .logo{
+      width:40px;height:40px;border-radius:14px;
       background: linear-gradient(145deg, var(--accent1), var(--accent2));
       box-shadow: var(--shadow);
-      display: grid;
-      place-items: center;
-      overflow: hidden;
+      display:grid;place-items:center;
+      overflow:hidden;
     }
-
-    .logo svg { width: 24px; height: 24px; opacity: .95; }
-
-    .brandTitle {
-      display: flex;
-      flex-direction: column;
-      gap: 1px;
-      line-height: 1.05;
-    }
-
-    .brandTitle b { font-size: 15px; letter-spacing: .2px; }
-    .brandTitle span { font-size: 12px; color: var(--muted); }
-
-    .actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .iconBtn {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      border: 1px solid var(--stroke);
+    .logo svg{width:24px;height:24px;opacity:.95}
+    .brandTitle{display:flex;flex-direction:column;gap:1px;line-height:1.05}
+    .brandTitle b{font-size:15px;letter-spacing:.2px}
+    .brandTitle span{font-size:12px;color:var(--muted)}
+    .actions{display:flex;align-items:center;gap:10px}
+    .iconBtn{
+      width:42px;height:42px;border-radius:14px;
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
-      transition: transform 0.08s;
+      display:grid;place-items:center;
+      cursor:pointer;
     }
+    .iconBtn svg{width:18px;height:18px;opacity:.92}
+    .iconBtn:active{transform: translateY(1px)}
 
-    .iconBtn:active { transform: translateY(1px); }
-
-    .iconBtn svg { width: 18px; height: 18px; opacity: .92; }
-
-    .searchRow {
-      display: none;
-      margin-top: 10px;
-      gap: 10px;
-      align-items: center;
-    }
-
-    .searchRow.show { display: flex; }
-
-    .searchInput {
-      flex: 1;
+    .searchRow{display:none;margin-top:10px;gap:10px;align-items:center}
+    .searchRow.show{display:flex}
+    .searchInput{
+      flex:1;
       padding: 11px 12px;
       border-radius: 14px;
-      border: 1px solid var(--stroke);
+      border:1px solid var(--stroke);
       background: rgba(15,16,22,.9);
       color: var(--text);
-      outline: none;
+      outline:none;
     }
-
-    .searchInput:focus {
-      box-shadow: 0 0 0 4px rgba(255,0,80,.08);
-    }
-
-    .chip {
-      border: 1px solid var(--stroke);
+    .searchInput:focus{box-shadow: 0 0 0 4px rgba(255,0,80,.08)}
+    .chip{
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
       padding: 10px 12px;
       border-radius: 14px;
       font-size: 13px;
-      cursor: pointer;
-      white-space: nowrap;
+      cursor:pointer;
+      white-space:nowrap;
     }
 
-    .menuPanel {
+    /* Menu dropdown (from top) */
+    .menuPanel{
       position: fixed;
       left: 0; right: 0;
       top: 0;
@@ -152,417 +96,292 @@
       transform: translate3d(0,-110%,0);
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.18s ease, opacity 0.18s ease;
+      will-change: transform, opacity;
+      transition: transform 240ms cubic-bezier(.22,.85,.22,1), opacity 200ms ease;
     }
-
-    .menuPanel.open {
-      transform: translate3d(0,0,0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .menuInner {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 14px 16px;
-    }
-
-    .menuCard {
-      background: rgba(12,13,18,.96);
-      border: 1px solid var(--stroke);
+    .menuPanel.open{transform: translate3d(0,0,0);opacity:1;pointer-events:auto}
+    .menuInner{max-width:1200px;margin:0 auto;padding:14px 14px 16px}
+    .menuCard{
+      background: rgba(12,13,18,.92);
+      border:1px solid var(--stroke);
       border-radius: 18px;
       box-shadow: var(--shadow);
-      overflow: hidden;
+      backdrop-filter: blur(14px);
+      overflow:hidden;
     }
-
-    .menuHead {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .menuHead{
+      display:flex;align-items:center;justify-content:space-between;
       padding: 12px 12px;
       border-bottom: 1px solid rgba(255,255,255,.08);
     }
-
-    .menuHead b { font-size: 13px; letter-spacing: .2px; }
-
-    .menuClose {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      border: 1px solid var(--stroke);
+    .menuHead b{font-size:13px;letter-spacing:.2px}
+    .menuClose{
+      width:40px;height:40px;border-radius:14px;
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      display: grid;
-      place-items: center;
-      cursor: pointer;
+      display:grid;place-items:center;
+      cursor:pointer;
     }
-
-    .menuClose svg { width: 18px; height: 18px; opacity: .92; }
-
-    .genres {
-      padding: 12px;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .genreBtn {
-      border: 1px solid var(--stroke);
+    .menuClose svg{width:18px;height:18px;opacity:.92}
+    .genres{padding:12px;display:flex;flex-wrap: wrap;gap:10px}
+    .genreBtn{
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
       padding: 9px 12px;
       border-radius: 999px;
       font-size: 13px;
-      cursor: pointer;
+      cursor:pointer;
     }
-
-    .genreBtn.active {
+    .genreBtn.active{
       border-color: rgba(255,255,255,.20);
       background: rgba(255,0,80,.10);
     }
-
-    .menuBackdrop {
+    .menuBackdrop{
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,.60);
+      background: rgba(0,0,0,.55);
       opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.18s ease;
+      pointer-events:none;
+      transition: opacity 200ms ease;
       z-index: 29;
     }
+    .menuBackdrop.open{opacity: 1; pointer-events:auto;}
 
-    .menuBackdrop.open { opacity: 1; pointer-events: auto; }
-
-    .sectionHead {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: 12px;
+    /* Main */
+    .sectionHead{
+      display:flex;align-items:flex-end;justify-content:space-between;
+      gap:12px;
       margin: 12px 0 10px;
     }
+    .sectionHead h2{margin:0;font-size:14px;letter-spacing:.2px}
+    .sectionHead .meta{color:var(--muted);font-size:12px}
 
-    .sectionHead h2 {
-      margin: 0;
-      font-size: 14px;
-      letter-spacing: .2px;
-    }
-
-    .sectionHead .meta {
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .grid {
-      display: grid;
+    /* ===== GRID: 3 columns on HP ===== */
+    .grid{
+      display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+      gap: 12px; /* spacing biar ga dempet */
+    }
+    /* Optional: kalau layar gede banget masih 3 biar konsisten */
+    @media (min-width: 980px){
+      .grid{gap: 14px}
     }
 
-    @media (min-width: 980px) {
-      .grid { gap: 14px; }
-    }
-
-    .card {
+    .card{
       background: var(--panel);
-      border: 1px solid var(--stroke);
+      border:1px solid var(--stroke);
       border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 6px 24px rgba(0,0,0,.28);
-      display: flex;
-      flex-direction: column;
+      overflow:hidden;
+      box-shadow: 0 14px 50px rgba(0,0,0,.32);
+      backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
       min-height: 100%;
-      transition: transform 0.12s ease;
+      transform: translate3d(0,0,0); /* bantu GPU */
     }
 
-    .card:hover {
-      transform: translateY(-2px);
-    }
-
-    .thumb {
-      width: 100%;
+    .thumb{
+      width:100%;
       aspect-ratio: 9 / 16;
-      background: #000;
-      position: relative;
-      overflow: hidden;
+      background:#000;
+      position:relative;
+      overflow:hidden;
     }
-
-    .thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+    .thumb img{
+      width:100%;height:100%;
+      object-fit:cover;display:block;
       filter: saturate(1.06) contrast(1.05);
     }
-
-    .thumbOverlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to top, rgba(0,0,0,.70), rgba(0,0,0,.15) 55%, transparent);
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
+    .thumbOverlay{
+      position:absolute; inset:0;
+      background: linear-gradient(to top, rgba(0,0,0,.62), rgba(0,0,0,.10) 55%, transparent);
+      display:flex;flex-direction:column;justify-content:flex-end;
       padding: 10px;
     }
-
-    .playPill {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
+    .playPill{
+      position:absolute; top:8px; left:8px;
+      display:inline-flex; align-items:center; gap:6px;
       padding: 7px 9px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(0,0,0,.40);
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.30);
       font-size: 11px;
     }
-
-    .playPill svg { width: 13px; height: 13px; }
-
-    .tTitle {
-      font-weight: 900;
+    .playPill svg{width:13px;height:13px}
+    .tTitle{
+      font-weight:900;
       font-size: 12px;
       line-height: 1.2;
-      text-shadow: 0 4px 12px rgba(0,0,0,.6);
+      text-shadow: 0 12px 30px rgba(0,0,0,.55);
     }
 
-    .info {
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
+    .info{
+      padding: 10px 10px 10px;
+      display:flex;
+      flex-direction:column;
       gap: 10px;
     }
-
-    .line1 {
-      display: flex;
-      gap: 8px;
+    .line1{
+      display:flex;
+      gap:8px;
       flex-wrap: wrap;
-      align-items: center;
+      align-items:center;
       color: rgba(255,255,255,.82);
       font-size: 11px;
     }
-
-    .tagMini {
-      display: inline-flex;
-      gap: 6px;
-      align-items: center;
+    .tagMini{
+      display:inline-flex;
+      gap:6px;
+      align-items:center;
       padding: 6px 8px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
       font-size: 11px;
       color: rgba(255,255,255,.78);
     }
+    .tagMini svg{width:13px;height:13px;opacity:.92}
 
-    .tagMini svg { width: 13px; height: 13px; opacity: .92; }
-
-    .playBtn {
-      width: 100%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px;
+    .playBtn{
+      width:100%;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding: 10px 10px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.28);
-      cursor: pointer;
-      user-select: none;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      cursor:pointer;
+      user-select:none;
       font-size: 12px;
       font-weight: 850;
-      transition: transform 0.08s;
+    }
+    .playBtn svg{width:16px;height:16px;opacity:.92}
+    .playBtn:active{transform: translateY(1px)}
+
+    /* ===== Scroll reveal animation (light) ===== */
+    .reveal{
+      opacity: 0;
+      transform: translate3d(0,10px,0);
+      will-change: transform, opacity;
+    }
+    .reveal.in{
+      opacity: 1;
+      transform: translate3d(0,0,0);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+    @media (prefers-reduced-motion: reduce){
+      .reveal, .reveal.in{opacity:1;transform:none;transition:none}
     }
 
-    .playBtn:active { transform: translateY(1px); }
-
-    .playBtn svg { width: 16px; height: 16px; opacity: .92; }
-
-    .pager {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 10px;
+    /* Pagination */
+    .pager{
+      display:flex;justify-content:center;align-items:center;gap:10px;
       margin-top: 14px;
     }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
+    .btn{
+      display:inline-flex;align-items:center;gap:8px;
       padding: 10px 12px;
       border-radius: 14px;
-      border: 1px solid var(--stroke);
+      border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
-      cursor: pointer;
-      user-select: none;
+      cursor:pointer;
+      user-select:none;
       font-size: 13px;
-      transition: transform 0.08s;
     }
+    .btn svg{width:16px;height:16px;opacity:.92}
+    .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 
-    .btn:active { transform: translateY(1px); }
-
-    .btn svg { width: 16px; height: 16px; opacity: .92; }
-
-    .btn[aria-disabled="true"] {
-      opacity: .45;
-      pointer-events: none;
-    }
-
-    footer {
+    /* Footer (fix biar ga aneh di HP) */
+    footer{
       margin-top: 22px;
       border-top: 1px solid rgba(255,255,255,.08);
       padding-top: 16px;
       color: rgba(255,255,255,.72);
       font-size: 12px;
-      display: flex;
+      display:flex;
       flex-wrap: wrap;
       gap: 10px;
-      align-items: center;
-      justify-content: space-between;
+      align-items:center;
+      justify-content:space-between;
     }
-
-    .footLeft {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .footLogo {
-      width: 34px;
-      height: 34px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.10);
+    .footLeft{display:flex;align-items:center;gap:10px}
+    .footLogo{
+      width:34px;height:34px;border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.04);
-      display: grid;
-      place-items: center;
+      display:grid;place-items:center;
     }
-
-    .footLogo svg { width: 18px; height: 18px; opacity: .92; }
-
-    .footRight {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .footLink {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
+    .footLogo svg{width:18px;height:18px;opacity:.92}
+    .footRight{display:flex;gap:12px;flex-wrap: wrap;align-items:center}
+    .footLink{
+      display:inline-flex;gap:8px;align-items:center;
       padding: 8px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
       background: rgba(255,255,255,.03);
     }
-
-    .footLink svg { width: 14px; height: 14px; opacity: .92; }
-
-    @media (max-width: 520px) {
-      footer { flex-direction: column; align-items: flex-start; }
-      .footRight { width: 100%; }
+    .footLink svg{width:14px;height:14px;opacity:.92}
+    @media (max-width: 520px){
+      footer{flex-direction:column;align-items:flex-start}
+      .footRight{width:100%}
     }
 
-    .gate {
-      position: fixed;
-      inset: 0;
+    /* Age Gate (unchanged styling from your latest) */
+    .gate{
+      position: fixed; inset: 0;
       z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(0,0,0,.80);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      background: rgba(0,0,0,.76);
+      backdrop-filter: blur(10px);
       padding: 18px;
     }
-
-    .gate.show { display: flex; }
-
-    .gateCard {
+    .gate.show{display:flex}
+    .gateCard{
       width: min(620px, 100%);
-      background: rgba(12,13,18,.96);
-      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(12,13,18,.92);
+      border:1px solid rgba(255,255,255,.12);
       border-radius: 18px;
       box-shadow: var(--shadow);
       padding: 16px;
     }
-
-    .gateHead {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .gateIcon {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
+    .gateHead{display:flex;align-items:center;gap:12px;margin-bottom: 10px}
+    .gateIcon{
+      width:44px;height:44px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
       background: rgba(255,255,255,.04);
-      display: grid;
-      place-items: center;
+      display:grid;place-items:center;
     }
-
-    .gateIcon svg { width: 22px; height: 22px; opacity: .95; }
-
-    .gateCard h3 { margin: 0; font-size: 14px; letter-spacing: .2px; }
-
-    .gateCard p {
-      margin: 6px 0 0;
-      color: rgba(255,255,255,.72);
-      font-size: 12px;
-      line-height: 1.45;
-    }
-
-    .gateRules {
+    .gateIcon svg{width:22px;height:22px;opacity:.95}
+    .gateCard h3{margin:0;font-size:14px;letter-spacing:.2px}
+    .gateCard p{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:12px;line-height:1.45}
+    .gateRules{
       margin-top: 10px;
-      border: 1px solid rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.10);
       background: rgba(0,0,0,.18);
       border-radius: 14px;
       padding: 12px;
     }
-
-    .gateRules b {
-      display: block;
-      font-size: 12px;
-      letter-spacing: .2px;
-      margin-bottom: 8px;
-      color: rgba(255,255,255,.86);
-    }
-
-    .gateRules ul {
-      margin: 0;
-      padding-left: 18px;
-      color: rgba(255,255,255,.70);
-      font-size: 12px;
-      line-height: 1.55;
-    }
-
-    .gateRules li { margin: 4px 0; }
-
-    .gateActions {
-      display: flex;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .gateBtn {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
+    .gateRules b{display:block;font-size:12px;letter-spacing:.2px;margin-bottom: 8px;color: rgba(255,255,255,.86)}
+    .gateRules ul{margin:0;padding-left: 18px;color: rgba(255,255,255,.70);font-size: 12px;line-height: 1.55}
+    .gateRules li{margin: 4px 0}
+    .gateActions{display:flex;gap:10px;margin-top:12px}
+    .gateBtn{
+      flex:1;
+      display:flex;align-items:center;justify-content:center;gap:8px;
       padding: 11px 12px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(0,0,0,.28);
-      cursor: pointer;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
+      cursor:pointer;
       font-weight: 800;
       color: rgba(255,255,255,.92);
-      transition: transform 0.08s;
     }
-
-    .gateBtn:active { transform: translateY(1px); }
-
-    .gateBtn svg { width: 16px; height: 16px; opacity: .92; }
+    .gateBtn svg{width:16px;height:16px;opacity:.92}
+    .gateBtn:active{transform: translateY(1px)}
   </style>
 </head>
 <body>
@@ -726,7 +545,7 @@
   </main>
 
   <script>
-    const PAGE_SIZE = 15;
+    const PAGE_SIZE = 15; // <= max kebawah 15 postingan
 
     let allPosts = [];
     let filtered = [];
@@ -756,27 +575,27 @@
 
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    function esc(s) {
+    function esc(s){
       return String(s)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#039;");
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
     }
 
-    async function apiGet(path) {
+    async function apiGet(path){
       const res = await fetch(path, { cache: "no-store" });
       if (!res.ok) return null;
       return res.json();
     }
 
-    function getText(post) {
+    function getText(post){
       const t = (post.title || "") + " " + (post.genre || "") + " " + (post.description || "");
       return t.toLowerCase();
     }
 
-    function applyFilter() {
+    function applyFilter(){
       const q = query.trim().toLowerCase();
 
       filtered = allPosts.filter(p => {
@@ -790,7 +609,25 @@
       renderGenres();
     }
 
-    function render() {
+    /* ===== reveal observer (light) ===== */
+    let io = null;
+    function setupReveal(){
+      if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+      if (io) io.disconnect();
+      io = new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add("in");
+            io.unobserve(e.target);
+          }
+        });
+      }, { root: null, threshold: 0.08, rootMargin: "80px 0px" });
+
+      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+    }
+
+    function render(){
       const total = filtered.length;
       const maxPage = Math.max(0, Math.ceil(total / PAGE_SIZE) - 1);
       page = Math.min(page, maxPage);
@@ -811,7 +648,7 @@
         const genre = (p.genre || "-");
 
         const card = document.createElement("a");
-        card.className = "card";
+        card.className = "card reveal";
         card.href = `/player.html?id=${encodeURIComponent(p.id || "")}`;
 
         const featuredBadge = (p.id && currentId && p.id === currentId)
@@ -861,18 +698,21 @@
 
         grid.appendChild(card);
       });
+
+      // start reveal after DOM update
+      setupReveal();
     }
 
-    function collectGenres(posts) {
+    function collectGenres(posts){
       const set = new Set();
       posts.forEach(p => {
         const g = (p.genre || "").trim();
         if (g) set.add(g);
       });
-      return ["All", ...Array.from(set).sort((a,b) => a.localeCompare(b)));
+      return ["All", ...Array.from(set).sort((a,b)=>a.localeCompare(b))];
     }
 
-    function renderGenres() {
+    function renderGenres(){
       const genres = collectGenres(allPosts);
 
       genreList.innerHTML = "";
@@ -889,16 +729,15 @@
       });
     }
 
-    function openMenu() {
+    function openMenu(){
       menuPanel.classList.add("open");
       menuBackdrop.classList.add("open");
-      menuPanel.setAttribute("aria-hidden", "false");
+      menuPanel.setAttribute("aria-hidden","false");
     }
-
-    function closeMenu() {
+    function closeMenu(){
       menuPanel.classList.remove("open");
       menuBackdrop.classList.remove("open");
-      menuPanel.setAttribute("aria-hidden", "true");
+      menuPanel.setAttribute("aria-hidden","true");
     }
 
     menuBtn.onclick = openMenu;
@@ -908,7 +747,7 @@
     searchBtn.onclick = () => {
       searchRow.classList.toggle("show");
       if (searchRow.classList.contains("show")) {
-        setTimeout(() => searchInput.focus(), 0);
+        setTimeout(()=>searchInput.focus(), 0);
       }
     };
 
@@ -930,7 +769,6 @@
       render();
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
-
     nextBtn.onclick = () => {
       if (nextBtn.getAttribute("aria-disabled") === "true") return;
       page = page + 1;
@@ -938,7 +776,7 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-    async function boot() {
+    async function boot(){
       const data = await apiGet("/api/posts");
       if (!data) {
         metaInfo.textContent = "Failed to load";
@@ -949,7 +787,7 @@
       allPosts = Array.isArray(data.posts) ? data.posts : [];
 
       if (currentId) {
-        allPosts.sort((a,b) => {
+        allPosts.sort((a,b)=>{
           if (a.id === currentId) return -1;
           if (b.id === currentId) return 1;
           return (b.createdAt || "").localeCompare(a.createdAt || "");
@@ -961,31 +799,33 @@
       applyFilter();
     }
 
-    /* Age Gate */
+    /* =========================
+       Age Gate (once per day)
+    ========================= */
     const ageGate = document.getElementById("ageGate");
     const ageYes = document.getElementById("ageYes");
     const ageNo = document.getElementById("ageNo");
 
-    function todayKey() {
+    function todayKey(){
       const d = new Date();
       const y = d.getFullYear();
-      const m = String(d.getMonth() + 1).padStart(2, "0");
-      const day = String(d.getDate()).padStart(2, "0");
+      const m = String(d.getMonth()+1).padStart(2,"0");
+      const day = String(d.getDate()).padStart(2,"0");
       return `${y}-${m}-${day}`;
     }
 
-    function shouldShowGate() {
+    function shouldShowGate(){
       const last = localStorage.getItem("SJHD_AGE_OK_DATE");
       return last !== todayKey();
     }
 
-    function passGate() {
+    function passGate(){
       localStorage.setItem("SJHD_AGE_OK_DATE", todayKey());
       ageGate.classList.remove("show");
       boot();
     }
 
-    function blockGate() {
+    function blockGate(){
       window.location.href = "about:blank";
     }
 
@@ -1000,4 +840,3 @@
   </script>
 </body>
 </html>
-```0
