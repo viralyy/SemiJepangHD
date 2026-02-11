@@ -224,6 +224,10 @@
         <h2>Publish</h2>
 
         <form id="publishForm" autocomplete="off">
+          <!-- EDIT MODE -->
+          <input type="hidden" id="editId" value="" />
+          <input type="hidden" id="editMode" value="0" />
+
           <label>Title</label>
           <input id="title" required />
 
@@ -260,7 +264,14 @@
 
           <button type="submit" style="margin-top:12px">
             <svg viewBox="0 0 24 24" fill="none"><path d="M12 3v12m0 0 4-4m-4 4-4-4" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 20.5h16" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/></svg>
-            <span>Publish</span>
+            <span id="submitLabel">Publish</span>
+          </button>
+
+          <button type="button" class="btn-ghost" id="cancelEditBtn" style="margin-top:10px;display:none">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M7 7 17 17M17 7 7 17" stroke="rgba(255,255,255,.92)" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <span>Cancel Edit</span>
           </button>
 
           <div class="row" style="margin-top:10px">
@@ -282,7 +293,7 @@
         <div class="row" style="gap:10px; align-items:flex-end">
           <div>
             <h2>History</h2>
-            <p class="sub">Set featured or delete</p>
+            <p class="sub">Set featured, edit, or delete</p>
           </div>
           <button class="btn-ghost" id="refreshBtn" style="max-width:180px">
             <svg viewBox="0 0 24 24" fill="none"><path d="M20 12a8 8 0 0 1-14.5 4.7M4 12A8 8 0 0 1 18.5 7.3" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/><path d="M20 8v4h-4M4 16v-4h4" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -329,6 +340,12 @@
 
     const serversWrap = document.getElementById("servers");
     const addServerBtn = document.getElementById("addServerBtn");
+
+    // EDIT controls
+    const editIdEl = document.getElementById("editId");
+    const editModeEl = document.getElementById("editMode");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const submitLabel = document.getElementById("submitLabel");
 
     function setStatus(el, msg, type){
       el.classList.remove("ok","err","warn");
@@ -400,7 +417,6 @@
       `;
       delBtn.onclick = () => {
         row.remove();
-        // keep at least one row
         if (!serversWrap.querySelector(".serverRow")) {
           addServerRow({ label: "Server 1", url: "" });
         }
@@ -421,6 +437,20 @@
       return servers;
     }
 
+    function setEditMode(on, id = "") {
+      editModeEl.value = on ? "1" : "0";
+      editIdEl.value = on ? String(id) : "";
+      cancelEditBtn.style.display = on ? "block" : "none";
+      submitLabel.textContent = on ? "Save Changes" : "Publish";
+    }
+
+    function resetFormToPublish() {
+      publishForm.reset();
+      serversWrap.innerHTML = "";
+      addServerRow({ label: "Server 1", url: "" });
+      setEditMode(false, "");
+    }
+
     addServerBtn.addEventListener("click", () => {
       const n = serversWrap.querySelectorAll(".serverRow").length + 1;
       addServerRow({ label: `Server ${n}`, url: "" });
@@ -428,6 +458,11 @@
 
     genreSelectEl.addEventListener("change", () => {
       if (genreSelectEl.value) genreCustomEl.value = "";
+    });
+
+    cancelEditBtn.addEventListener("click", () => {
+      setStatus(panelStatus, "", "");
+      resetFormToPublish();
     });
 
     async function loadHistory(){
@@ -471,8 +506,9 @@
         `;
 
         const right = document.createElement("div");
-        const isHls = (p.stream || "").toLowerCase().includes(".m3u8");
-        const isMp4 = (p.stream || "").toLowerCase().match(/\.(mp4|webm|ogg)(\?|#|$)/);
+        const primary = (p.streams && p.streams[0]?.url) ? p.streams[0].url : (p.stream || "");
+        const isHls = (primary || "").toLowerCase().includes(".m3u8");
+        const isMp4 = (primary || "").toLowerCase().match(/\.(mp4|webm|ogg)(\?|#|$)/);
         const tagLabel = isHls ? "HLS" : (isMp4 ? "VIDEO" : "PAGE");
         const tagIcon = isHls
           ? '<svg viewBox="0 0 24 24" fill="none"><path d="M4.5 7.5h15M4.5 12h15M4.5 16.5h15" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/></svg>'
@@ -505,6 +541,53 @@
           await loadHistory();
         };
 
+        const editBtn = document.createElement("button");
+        editBtn.className = "btn-ghost";
+        editBtn.innerHTML = `
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M4 20h4l10.5-10.5a2 2 0 0 0 0-3L16.5 4a2 2 0 0 0-3 0L3 14.5V20Z"
+              stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linejoin="round"/>
+            <path d="M13.5 6.5 17.5 10.5" stroke="rgba(255,255,255,.92)" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+          <span>Edit</span>
+        `;
+        editBtn.onclick = () => {
+          // fill form from post
+          titleEl.value = p.title || "";
+          posterUrlEl.value = p.poster || "";
+          minutesEl.value = String(p.minutes ?? "");
+          descEl.value = p.description || "";
+
+          // genre select/custom
+          const g = (p.genre || "").trim();
+          if (g) {
+            // if exists in select, pick it; else put into custom
+            const opt = Array.from(genreSelectEl.options).find(o => o.value === g);
+            if (opt) {
+              genreSelectEl.value = g;
+              genreCustomEl.value = "";
+            } else {
+              genreSelectEl.value = "";
+              genreCustomEl.value = g;
+            }
+          } else {
+            genreSelectEl.value = "";
+            genreCustomEl.value = "";
+          }
+
+          // servers
+          serversWrap.innerHTML = "";
+          const ss = Array.isArray(p.streams) && p.streams.length
+            ? p.streams
+            : (p.stream ? [{ label: "Server 1", url: p.stream }] : []);
+          if (!ss.length) ss.push({ label: "Server 1", url: "" });
+          ss.forEach(s => addServerRow({ label: s.label || "", url: s.url || "" }));
+
+          setEditMode(true, p.id);
+          setStatus(panelStatus, `Editing: ${p.id}`, "warn");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        };
+
         const delBtn = document.createElement("button");
         delBtn.className = "btn-danger";
         delBtn.innerHTML = `
@@ -522,6 +605,7 @@
         };
 
         btns.appendChild(setBtn);
+        btns.appendChild(editBtn);
         btns.appendChild(delBtn);
 
         item.appendChild(top);
@@ -553,7 +637,6 @@
       showPanel();
       setStatus(panelStatus, "", "");
 
-      // init at least one server row
       if (!serversWrap.querySelector(".serverRow")) {
         addServerRow({ label: "Server 1", url: "" });
       }
@@ -605,24 +688,41 @@
 
       const stream = streams[0].url;
 
+      const editMode = editModeEl.value === "1";
+      const editId = editIdEl.value || "";
+
       setStatus(panelStatus, "Working...", "warn");
-      const r = await apiPost("/api/publish", {
-        ...auth,
-        title,
-        poster,
-        stream,
-        streams,
-        genre,
-        minutes,
-        description
-      });
+
+      let r;
+      if (editMode && editId) {
+        r = await apiPost("/api/edit-post", {
+          ...auth,
+          id: editId,
+          title,
+          poster,
+          stream,
+          streams,
+          genre,
+          minutes,
+          description
+        });
+      } else {
+        r = await apiPost("/api/publish", {
+          ...auth,
+          title,
+          poster,
+          stream,
+          streams,
+          genre,
+          minutes,
+          description
+        });
+      }
 
       setStatus(panelStatus, r.ok ? "Done" : `Error: ${r.status}`, r.ok ? "ok" : "err");
 
       if (r.ok) {
-        publishForm.reset();
-        serversWrap.innerHTML = "";
-        addServerRow({ label: "Server 1", url: "" });
+        resetFormToPublish();
         await loadHistory();
       }
     });
