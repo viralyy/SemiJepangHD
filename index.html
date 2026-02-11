@@ -18,7 +18,6 @@
       --accent2: rgba(120,90,255,.85);
       --danger: rgba(255,64,64,.95);
     }
-
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -42,13 +41,8 @@
       backdrop-filter: blur(10px);
       padding: 10px 0 12px;
     }
-    .topbar{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-    }
-    .brand{
-      display:flex;align-items:center;gap:10px;
-      min-width: 210px;
-    }
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;align-items:center;gap:10px;min-width:210px}
     .logo{
       width:40px;height:40px;border-radius:14px;
       background: linear-gradient(145deg, var(--accent1), var(--accent2));
@@ -57,15 +51,10 @@
       overflow:hidden;
     }
     .logo svg{width:24px;height:24px;opacity:.95}
-    .brandTitle{
-      display:flex;flex-direction:column;gap:1px;
-      line-height:1.05;
-    }
+    .brandTitle{display:flex;flex-direction:column;gap:1px;line-height:1.05}
     .brandTitle b{font-size:15px;letter-spacing:.2px}
     .brandTitle span{font-size:12px;color:var(--muted)}
-    .actions{
-      display:flex;align-items:center;gap:10px;
-    }
+    .actions{display:flex;align-items:center;gap:10px}
     .iconBtn{
       width:42px;height:42px;border-radius:14px;
       border:1px solid var(--stroke);
@@ -75,12 +64,7 @@
     }
     .iconBtn svg{width:18px;height:18px;opacity:.92}
     .iconBtn:active{transform: translateY(1px)}
-    .searchRow{
-      display:none;
-      margin-top: 10px;
-      gap:10px;
-      align-items:center;
-    }
+    .searchRow{display:none;margin-top:10px;gap:10px;align-items:center}
     .searchRow.show{display:flex}
     .searchInput{
       flex:1;
@@ -102,7 +86,7 @@
       white-space:nowrap;
     }
 
-    /* Menu dropdown (from top) */
+    /* Menu dropdown */
     .menuPanel{
       position: fixed;
       left: 0; right: 0;
@@ -114,16 +98,8 @@
       will-change: transform, opacity;
       transition: transform 240ms cubic-bezier(.22,.85,.22,1), opacity 200ms ease;
     }
-    .menuPanel.open{
-      transform: translate3d(0,0,0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .menuInner{
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 14px 16px 16px;
-    }
+    .menuPanel.open{transform: translate3d(0,0,0);opacity:1;pointer-events:auto}
+    .menuInner{max-width:1200px;margin:0 auto;padding:14px 16px 16px}
     .menuCard{
       background: rgba(12,13,18,.92);
       border:1px solid var(--stroke);
@@ -146,12 +122,7 @@
       cursor:pointer;
     }
     .menuClose svg{width:18px;height:18px;opacity:.92}
-    .genres{
-      padding: 12px;
-      display:flex;
-      flex-wrap: wrap;
-      gap:10px;
-    }
+    .genres{padding:12px;display:flex;flex-wrap:wrap;gap:10px}
     .genreBtn{
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.04);
@@ -184,17 +155,21 @@
     .sectionHead h2{margin:0;font-size:14px;letter-spacing:.2px}
     .sectionHead .meta{color:var(--muted);font-size:12px}
 
-    /* ===== GRID: 3 kolom ===== */
+    /* ===== GRID: 3 COLUMNS + SPACING ===== */
     .grid{
       display:grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px; /* biar gak dempet */
     }
+    /* responsif */
     @media (max-width: 980px){
-      .grid{grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px;}
+      .grid{grid-template-columns: repeat(3, minmax(0, 1fr)); gap:12px;}
     }
-    @media (max-width: 560px){
-      .grid{grid-template-columns: 1fr; gap: 12px;}
+    @media (max-width: 720px){
+      .grid{grid-template-columns: repeat(2, minmax(0, 1fr)); gap:12px;}
+    }
+    @media (max-width: 420px){
+      .grid{grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;}
     }
 
     .card{
@@ -207,22 +182,19 @@
       display:flex;
       flex-direction:column;
       min-height: 100%;
-    }
 
-    /* ===== Animasi masuk (ringan) ===== */
-    .reveal{
+      /* ===== scroll reveal (ringan) ===== */
       opacity: 0;
-      transform: translate3d(0,10px,0);
-      transition: opacity 220ms ease, transform 260ms cubic-bezier(.22,.85,.22,1);
-      will-change: opacity, transform;
+      transform: translate3d(0, 12px, 0);
+      will-change: transform, opacity;
+      transition: transform 260ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
     }
-    .reveal.show{
+    .card.reveal{
       opacity: 1;
       transform: translate3d(0,0,0);
     }
     @media (prefers-reduced-motion: reduce){
-      .reveal{transition:none; transform:none; opacity:1}
-      .reveal.show{transform:none}
+      .card{transition:none; transform:none; opacity:1}
     }
 
     .thumb{
@@ -321,10 +293,7 @@
       font-size: 13px;
     }
     .btn svg{width:16px;height:16px;opacity:.92}
-    .btn[aria-disabled="true"]{
-      opacity:.45;
-      pointer-events:none;
-    }
+    .btn[aria-disabled="true"]{opacity:.45;pointer-events:none}
 
     /* Footer */
     footer{
@@ -339,9 +308,7 @@
       align-items:center;
       justify-content:space-between;
     }
-    .footLeft{
-      display:flex;align-items:center;gap:10px;
-    }
+    .footLeft{display:flex;align-items:center;gap:10px}
     .footLogo{
       width:34px;height:34px;border-radius:14px;
       border:1px solid rgba(255,255,255,.10);
@@ -349,9 +316,7 @@
       display:grid;place-items:center;
     }
     .footLogo svg{width:18px;height:18px;opacity:.92}
-    .footRight{
-      display:flex;gap:12px;flex-wrap: wrap;align-items:center;
-    }
+    .footRight{display:flex;gap:12px;flex-wrap: wrap;align-items:center}
     .footLink{
       display:inline-flex;gap:8px;align-items:center;
       padding: 8px 10px;
@@ -361,7 +326,7 @@
     }
     .footLink svg{width:14px;height:14px;opacity:.92}
 
-    /* Age Gate (more professional, neutral buttons) */
+    /* Age Gate */
     .gate{
       position: fixed; inset: 0;
       z-index: 50;
@@ -381,10 +346,7 @@
       box-shadow: var(--shadow);
       padding: 16px;
     }
-    .gateHead{
-      display:flex;align-items:center;gap:12px;
-      margin-bottom: 10px;
-    }
+    .gateHead{display:flex;align-items:center;gap:12px;margin-bottom: 10px}
     .gateIcon{
       width:44px;height:44px;border-radius:16px;
       border:1px solid rgba(255,255,255,.12);
@@ -595,7 +557,7 @@
   </main>
 
   <script>
-    const PAGE_SIZE = 15; // ✅ dari 10 jadi 15 (logic paging tetap sama)
+    const PAGE_SIZE = 10;
 
     let allPosts = [];
     let filtered = [];
@@ -659,20 +621,32 @@
       renderGenres();
     }
 
-    /* ===== reveal animation (ringan) ===== */
-    let io = null;
-    function setupReveal(){
-      if (io) io.disconnect();
-      io = new IntersectionObserver((entries)=>{
-        entries.forEach(ent=>{
-          if (ent.isIntersecting){
-            ent.target.classList.add("show");
-            io.unobserve(ent.target);
-          }
-        });
-      }, { root: null, threshold: 0.12 });
+    /* ===== Scroll reveal (ringan) ===== */
+    let revealObserver = null;
+    function initRevealObserver(){
+      if (revealObserver) return;
+      if (!("IntersectionObserver" in window)) return;
 
-      document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+      revealObserver = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            e.target.classList.add("reveal");
+            revealObserver.unobserve(e.target);
+          }
+        }
+      }, {
+        threshold: 0.12,
+        rootMargin: "0px 0px -10% 0px"
+      });
+    }
+    function observeCards(){
+      initRevealObserver();
+      if (!revealObserver) {
+        // fallback: langsung tampil
+        document.querySelectorAll(".card").forEach(c => c.classList.add("reveal"));
+        return;
+      }
+      document.querySelectorAll(".card").forEach(c => revealObserver.observe(c));
     }
 
     function render(){
@@ -696,7 +670,7 @@
         const genre = (p.genre || "-");
 
         const card = document.createElement("a");
-        card.className = "card reveal";  // ✅ tambah reveal class
+        card.className = "card";
         card.href = `/player.html?id=${encodeURIComponent(p.id || "")}`;
 
         const featuredBadge = (p.id && currentId && p.id === currentId)
@@ -747,8 +721,8 @@
         grid.appendChild(card);
       });
 
-      // ✅ setelah render, pasang observer animasi
-      setupReveal();
+      // animasi reveal (tidak mengubah logic data)
+      observeCards();
     }
 
     function collectGenres(posts){
@@ -794,9 +768,7 @@
 
     searchBtn.onclick = () => {
       searchRow.classList.toggle("show");
-      if (searchRow.classList.contains("show")) {
-        setTimeout(()=>searchInput.focus(), 0);
-      }
+      if (searchRow.classList.contains("show")) setTimeout(()=>searchInput.focus(), 0);
     };
 
     searchInput.addEventListener("input", (e) => {
@@ -878,12 +850,8 @@
     ageYes.onclick = passGate;
     ageNo.onclick = blockGate;
 
-    if (shouldShowGate()) {
-      ageGate.classList.add("show");
-    } else {
-      boot();
-    }
+    if (shouldShowGate()) ageGate.classList.add("show");
+    else boot();
   </script>
-
 </body>
 </html>
